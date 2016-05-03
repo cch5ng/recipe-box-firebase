@@ -1,0 +1,155 @@
+/* app/main.scss */
+
+//vars
+$primary-color: #f9f9fd;
+$nav-color: #FFFF33;
+$logo-color: #363689;
+$table-color: #c0c0ea;
+
+body {
+	background: $primary-color;
+}
+
+//bootstrap override
+.navbar navbar-default {
+	border-width: 0;
+	border-radius: none;
+}
+
+.navbar {
+	background-color: $nav-color;
+}
+
+.nav-logo {
+	width: 269px;
+	margin-top: -5px;
+}
+
+.navbar-default .navbar-brand {
+	color: $logo-color;
+}
+
+.navbar-brand {
+	font-family: 'Lobster Two', cursive;
+	font-size: 1.65em;
+}
+
+//not enough viz contrast with white text on red bgd
+.btn-danger {
+	color: #000;
+}
+
+.btn-default {
+	background-color: #e5e5e5;
+}
+
+button {
+	margin-right: 8px;
+}
+
+// react-bootstrap modal
+.modal-container {
+  position: relative;
+}
+
+.modal-container .modal, .modal-container .modal-backdrop {
+  position: absolute;
+}
+
+.center {
+	text-align: center;
+}
+
+.clear {
+	clear: both;
+}
+
+.hidden {
+	display: none;
+}
+
+.recipe {
+	width: 80%;
+	background-color: $table-color;
+	border: 1px solid grey;
+	border-radius: 3px;
+	margin: 5px auto;
+	padding-left: 10px;
+}
+
+.h5 {
+	//text-decoration: underline;
+	text-align: center;
+}
+
+//keeps the delete/edit buttons in same grouping with their recipe
+.padding {
+	padding-bottom: 40px;
+}
+
+.ingredientList {
+	width: 90%;
+	background-color: $primary-color;
+	border: 1px solid grey;
+	border-radius: 3px;
+	margin-bottom: 5px;
+	margin: 0 auto;
+}
+
+.ingredient {
+	border-bottom: 1px solid grey;
+	padding: 5px 10px;
+}
+
+.button-section {
+	padding-top: 8px;
+}
+
+.buttons {
+	float: left;
+	list-style: none;
+	margin-right: 5px;
+}
+
+.btn-add {
+	margin-left: 10%;
+}
+
+
+
+
+
+input {
+	width: 200px;
+}
+
+.avatar {
+	width: 28px;
+	border-radius: 3px;
+}
+
+.dynamic-header {
+	color: #21586b;
+	text-decoration: underline;
+}
+
+.fa-caret-down {
+	text-decoration: underline;
+}
+
+.fa-heart {
+	color: #990033;
+}
+
+.hide-fa {
+	display: none;
+}
+
+//override fixed-data-table css
+.fixedDataTableLayout_main {
+	margin: 0 auto;
+}
+
+.footer {
+	padding-top: 30px;
+}
