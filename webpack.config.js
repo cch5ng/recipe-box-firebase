@@ -54,9 +54,10 @@ const common = {
   },
   plugins: [
     new HtmlWebpackPlugin({
+      inject: false,
     	template: 'node_modules/html-webpack-template/index.ejs',
     	title: 'Recipe Box (Firebase-React)',
-    	appMountId: 'app'
+    	appMountId: 'app',
     })
   ]
 };

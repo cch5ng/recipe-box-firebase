@@ -1,7 +1,11 @@
 {
   "name": "recipe-box-firebase",
   "version": "1.0.0",
-  "description": "",
+  "description": "recipe app with firebase backend",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/cch5ng/recipe-box-firebase.git"
+  },
   "main": "index.js",
   "scripts": {
     "build": "webpack",
@@ -34,8 +38,8 @@
     "flux": "^2.1.1",
     "node-uuid": "^1.4.7",
     "object-assign": "^4.0.1",
-    "react": "^0.14.6",
+    "react": "^0.14.8",
     "react-bootstrap": "^0.28.2",
-    "react-dom": "^0.14.6"
+    "react-dom": "^0.14.8"
   }
 }

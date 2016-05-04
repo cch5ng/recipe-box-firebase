@@ -19724,16 +19724,8 @@
 			_initialiseProps.call(_this);
 
 			var namesAr = [];
-			var recipes = [];
-			//namesAr = this.getNames();
-			//namesAr.forEach(name => {
-			//	let mrecipe = {};
-			//	mrecipe.name = name;
-			// 	mrecipe.id = uuid.v4();
-			//	recipes.push(mrecipe);
-			//});
 			_this.state = {
-				recipes: recipes,
+				recipes: [],
 				show: false,
 				nameValid: 'success'
 			};
@@ -19749,30 +19741,34 @@
 				var keysAr = [],
 				    recipesAr = [];
 				this.firebaseRef = new Firebase("https://recipe-keeper.firebaseio.com/web/data/box");
-				this.firebaseRef.on('value', function (snapshot) {
-					console.log('results: ' + snapshot.val());
-					var boxObj = snapshot.val();
-					var recipeObj = snapshot.val().recipes;
-					console.log('recipes keys: ' + Object.keys(recipeObj));
-					keysAr = Object.keys(recipeObj);
-					keysAr.forEach(function (key) {
-						var recipeObj = {};
-						console.log('key: ' + key);
-						console.log('key obj: ' + boxObj[key]);
-						console.log('name: ' + boxObj[key].name);
-						recipeObj.name = boxObj[key].name;
-						recipeObj.id = key;
-						recipesAr.push(recipeObj);
-					});
-					this.setState({
-						recipes: recipesAr
-					});
-					//		this.firebaseRef.on("child_added", function(dataSnapshot) {
-					//			this.items.push(dataSnapshot.val());
-					//			this.setState({
-					//				items: this.items
-					//			});
-				}.bind(this));
+
+				if (this.state.recipes.length === 0) {
+					this.firebaseRef.on('value', function (snapshot) {
+						console.log('results: ' + snapshot.val());
+						var boxObj = snapshot.val();
+						var recipeObj = snapshot.val().recipes;
+						console.log('recipes keys: ' + Object.keys(recipeObj));
+						keysAr = Object.keys(recipeObj);
+						keysAr.forEach(function (key) {
+							var recipeObj = {};
+							console.log('key: ' + key);
+							console.log('key obj: ' + boxObj[key]);
+							console.log('name: ' + boxObj[key].name);
+							recipeObj.name = boxObj[key].name;
+							recipeObj.id = key;
+							recipesAr.push(recipeObj);
+						});
+						console.log('length recipesAr: ' + recipesAr.length);
+						this.setState({
+							recipes: recipesAr
+						});
+						//		this.firebaseRef.on("child_added", function(dataSnapshot) {
+						//			this.items.push(dataSnapshot.val());
+						//			this.setState({
+						//				items: this.items
+						//			});
+					}.bind(this));
+				} else {}
 
 				//get array of recipe id's
 				// 		let recipesRef = new Firebase('https://recipe-keeper.firebaseio.com/web/data/box/recipes');
@@ -19985,18 +19981,28 @@
 					var itemCopy = item.slice(0).trim();
 					ingredientsTrim.push(itemCopy);
 				});
-				//making the ingredients list in localStorage comma delimited but no space
-				var ingredientsStrClean = ingredientsTrim.join(',');
 
-				//updating localStorage
-				localStorage.setItem(name, ingredientsStrClean);
+				//update firebase
+				var recipeId = _nodeUuid2.default.v4();
+				_this3.firebaseRef.update({
+					recipeId: {
+						name: name,
+						owner: 'cchung'
+					},
+					recipes: {
+						recipeId: {
+							ingredients: ingredientsTrim,
+							steps: []
+						}
+					}
+				});
 
 				var form = document.getElementById('recipeForm');
 				form.reset();
 
 				var curRecipes = _this3.state.recipes;
 				var recipeObj = {};
-				recipeObj.id = _nodeUuid2.default.v4();
+				recipeObj.id = recipeId;
 				recipeObj.name = name;
 				curRecipes.push(recipeObj);
 				_this3.setState({ recipes: curRecipes });
@@ -20077,15 +20083,13 @@
 		return _react2.default.createElement(
 			'div',
 			{ className: 'recipeList' },
-			_react2.default.createElement(
-				'ul',
-				null,
-				recipes.map(function (recipe) {
-					return _react2.default.createElement(_Recipe2.default, { key: recipe.id, name: recipe.name, onDelete: onDelete.bind(null, recipe.id) });
-				})
-			)
+			recipes.map(function (recipe) {
+				return _react2.default.createElement(_Recipe2.default, { key: recipe.id, name: recipe.name, onDelete: onDelete.bind(null, recipe.id) });
+			})
 		);
 	};
+
+	//<ul />
 
 /***/ },
 /* 161 */
