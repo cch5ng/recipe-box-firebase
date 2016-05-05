@@ -8,6 +8,9 @@ import uuid from 'node-uuid';
 import {Modal} from 'react-bootstrap';
 import {Button} from 'react-bootstrap';
 import {Input} from 'react-bootstrap';
+import Rebase from 're-base';
+
+var base = Rebase.createClass('https://recipe-keeper.firebaseio.com/web/data');
 
 export default class App extends React.Component {
 	constructor(props) {
@@ -22,62 +25,11 @@ export default class App extends React.Component {
 
 //05.02.16 3:45p need to verify; not sure componentWillMount goes here in es6 format
 	componentWillMount() {
-		let keysAr = [], recipesAr = [];
-		this.firebaseRef = new Firebase("https://recipe-keeper.firebaseio.com/web/data/box");
-
-		//if (this.state.recipes.length === 0) {
-			this.firebaseRef.on('value', function(snapshot) {
-				console.log('results: ' + snapshot.val());
-				let boxObj = snapshot.val();
-				let recipeObj = snapshot.val().recipes;
-				console.log('recipes keys: ' + Object.keys(recipeObj));
-				keysAr = Object.keys(recipeObj);
-				keysAr.forEach(function(key) {
-					let recipeObj = {};
-					console.log('key: ' + key);
-					console.log('key obj: ' + boxObj[key]);
-					console.log('name: ' + boxObj[key].name);
-					recipeObj.name = boxObj[key].name;
-					recipeObj.id = key;
-					console.log('recipeObj.id: ' + recipeObj.id);
-					recipesAr.push(recipeObj);
-				});
-				console.log('length recipesAr: ' + recipesAr.length);
-				this.setState({
-					recipes: recipesAr
-				});
-	//		this.firebaseRef.on("child_added", function(dataSnapshot) {
-	//			this.items.push(dataSnapshot.val());
-	//			this.setState({
-	//				items: this.items
-	//			});
-			}.bind(this));
-		//} else {
-
-		//}
-
-
-		//get array of recipe id's
-// 		let recipesRef = new Firebase('https://recipe-keeper.firebaseio.com/web/data/box/recipes');
-// 		recipesRef.on('value', function(snapshot) {
-// 			console.log('results: ' + snapshot.val());
-// 			let recipeObj = snapshot.val();
-// 			console.log('recipes keys: ' + Object.keys(recipeObj));
-// 			let recipeKeysAr = Object.keys(recipeObj);
-// 			let boxRef = new Firebase('https://recipe-keeper.firebaseio.com/web/data/box');
-// 			boxRef.on('value', function(snap2) {
-// 				let boxObj = snap2;
-// 			//for each item in array
-// 				recipeKeysAr.forEach(function(key) {
-// //mon 05.02.16 3:20pm need to verify results
-// 					console.log('name: ' + boxObj.key.name);
-// 					namesAr.push(boxObj.key.name);
-// 				});
-// 				console.log('length namesAr: ' + namesAr.length);
-// 				//get the name
-// 			});
-// 		});
-
+		base.bindToState('recipes', {
+			context: this,
+			state: 'recipes',
+			asArray: true
+		});
 	}
 
 	render() {
@@ -157,12 +109,12 @@ export default class App extends React.Component {
 		if (this.state.nameValid === 'success') {
 			event.preventDefault();
 
-	//parsing the ingredients, cleaning up the format so it will display cleanly later on
+			//parsing the ingredients, cleaning up the format so it will display cleanly later on
 			let name = document.getElementById('recipeName').value;
 			console.log('name: ' + name);
 			var ingredientsStr = document.getElementById('recipeIngredients').value;
 			var ingredientsAr = ingredientsStr.split(',');
-		//stores final array of ingredients strings, trimmed
+			//stores final array of ingredients strings, trimmed
 			var ingredientsTrim = [];
 			ingredientsAr.forEach(function(item) {
 				var itemCopy = item.slice(0).trim();
@@ -170,33 +122,15 @@ export default class App extends React.Component {
 			});
 
 		//update firebase
-			var recipeId = uuid.v4();
-			console.log('recipeId: ' + recipeId);
-			this.firebaseRef.update({
-				recipeId: {
-					name: name,
-					owner: 'cchung'
-				}
-			}).bind(this);
-
-			this.firebaseRef.recipes.updateChildren({
-				recipeId: {
-					ingredients: ingredientsTrim,
-					steps: []
-				}
-			}).bind(this);
-
-			let form = document.getElementById('recipeForm');
-			form.reset();
-
-			let curRecipes = this.state.recipes;
-			let recipeObj = {};
-			recipeObj.id = recipeId;
-			recipeObj.name = name;
-			curRecipes.push(recipeObj);
-			this.setState({recipes: curRecipes});
-			//console.log('typeof recipes from addRecipes: ' + typeof this.state.recipes);
-			//console.log('recipes length: ' + this.state.recipes.length);
+			base.push('recipes', {
+					data:  {name: name,
+							owner: 'cchung',
+							ingredients: ingredientsTrim
+					}//,
+				//then(){
+				//	Router.transitionTo('dashboard');
+				//}
+			});
 		}
 	};
 

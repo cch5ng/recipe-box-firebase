@@ -11,10 +11,11 @@ export default ({recipes, onDelete}) => {
 	return (
 		<div className="recipeList">
 			{recipes.map(recipe =>
-				<Recipe key={recipe.id} name={recipe.name} onDelete={onDelete.bind(null, recipe.id)} />
+				<Recipe key={recipe.key} name={recipe.name} ingredients={recipe.ingredients} onDelete={onDelete.bind(null, recipe.key)} />
 			)}
 		</div>
 	)
 }
 
+// 
 //<ul />

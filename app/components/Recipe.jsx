@@ -13,61 +13,26 @@ export default class Recipe extends React.Component {
 		this.state = {
 			isOpen: false,
 			name: this.props.name,
-			ingredients: this.getIngredients()
+			key: this.props.key,
+			ingredients: this.props.ingredients
 		}
 	}
 
 	render() {
 		var key = this.props.key;
 //ISSUE key prop undefined
-		console.log('recipe key: ' + key);
 		var name = this.props.name;
+
 		const onDelete = this.props.onDelete;
-		//console.log('recipe name: ' + name);
 
 		//using the recipe name as a unique identifier to set className and accordion display state
 		let classStr, classStrOutter;
 		(this.state.isOpen) ? classStr = this.concatName() + ' padding' : classStr = this.concatName() + ' padding hidden';
 		(name) ? classStrOutter = 'recipe clear' : classStrOutter = 'recipe clear hidden';
-		let ingredientsAr = [];
 
-
-
-		//pseudocode
-		//for key, get the ingredients ar
-		//this.recipesRef = this.firebaseRef.recipes;
-		this.recipesRef = new Firebase("https://recipe-keeper.firebaseio.com/web/data/box/recipes");
-		this.recipesRef.on('value', function(snapshot) {
-			let recipeObj = snapshot.val();
-			console.log('recipeObj: ' + recipeObj);
-			console.log('keyObj: ' + recipeObj['id1']);
-			console.log('recipeIngredients: ' + recipeObj['id1'].ingredients);
-			//find recipe with matching key and retrieve ingredients
-			let keysAr = Object.keys(recipeObj);
-			keysAr.forEach(function(mkey) {
-				if (mkey === key) {
-					let ingredientsAr = recipeObj[key].ingredients;
-				}
-			})
-			this.setState({
-				ingredients: ingredientsAr
-			});
-
-		});
-		//for key, get the steps ar
-
-
-		//let ingredientsStr;
-		//let nameStr = this.props.name;
-		//console.log('this.props.data: ' + this.props.data);
-		//ingredientsStr = localStorage.getItem(name);
-		//console.log('ingredientsStr: ' + ingredientsStr);
-		//if (ingredientsStr) {
-//on data input to localStorage, spaces are trimmed so list should be strictly comma-delimited
-		//	ingredientsAr = ingredientsStr.split(',');
-		//}
-		// console.log('length ingredientsAr: ' + ingredientsAr.length);
-		var ingredientNodes = ingredientsAr.map(function(ingred, i) {
+		let nameStr = this.props.name;
+		let ingreds = this.state.ingredients;
+		var ingredientNodes = ingreds.map(function(ingred, i) {
 			let keyStr = trimSpaces(nameStr) + ingred;
 			return (
 				<div className="ingredient" key={i} >
@@ -123,16 +88,16 @@ export default class Recipe extends React.Component {
 		);
 	}
 
-	/**
-	 * Gets ingredients from localStorage and puts them in state.
-	 * @return {[type]} [description]
-	 */
-	getIngredients = () => {
-		//let ingredientsStr = localStorage.getItem(this.props.name);
-		//console.log('ingredientsStr: ' + ingredientsStr);
-		let ingredientsAr = []
-		return ingredientsAr;
-	};
+	// /**
+	//  * Gets ingredients from localStorage and puts them in state.
+	//  * @return {[type]} [description]
+	//  */
+	// getIngredients = () => {
+	// 	//let ingredientsStr = localStorage.getItem(this.props.name);
+	// 	//console.log('ingredientsStr: ' + ingredientsStr);
+	// 	let ingredientsAr = []
+	// 	return ingredientsAr;
+	// };
 
 	/**
 	 * Updates state with edit form values
