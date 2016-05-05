@@ -19738,58 +19738,33 @@
 		_createClass(App, [{
 			key: 'componentWillMount',
 			value: function componentWillMount() {
+				var that = this;
 				var keysAr = [],
 				    recipesAr = [];
-				this.firebaseRef = new Firebase("https://recipe-keeper.firebaseio.com/web/data/box");
+				this.firebaseRef = new Firebase("https://recipe-keeper.firebaseio.com/web/data/recipes");
 
-				if (this.state.recipes.length === 0) {
-					this.firebaseRef.on('value', function (snapshot) {
-						console.log('results: ' + snapshot.val());
-						var boxObj = snapshot.val();
-						var recipeObj = snapshot.val().recipes;
-						console.log('recipes keys: ' + Object.keys(recipeObj));
-						keysAr = Object.keys(recipeObj);
-						keysAr.forEach(function (key) {
-							var recipeObj = {};
-							console.log('key: ' + key);
-							console.log('key obj: ' + boxObj[key]);
-							console.log('name: ' + boxObj[key].name);
-							recipeObj.name = boxObj[key].name;
-							recipeObj.id = key;
-							recipesAr.push(recipeObj);
-						});
-						console.log('length recipesAr: ' + recipesAr.length);
-						this.setState({
-							recipes: recipesAr
-						});
-						//		this.firebaseRef.on("child_added", function(dataSnapshot) {
-						//			this.items.push(dataSnapshot.val());
-						//			this.setState({
-						//				items: this.items
-						//			});
-					}.bind(this));
-				} else {}
+				this.firebaseRef.on('value', function (snapshot) {
+					//console.log('results: ' + snapshot.val());
+					//let recipeObj = snapshot.val();
+					//console.log('recipes keys: ' + Object.keys(recipeObj));
+					//keysAr = Object.keys(recipeObj);
+					snapshot.forEach(function (childSnapshot) {
+						var item = childSnapshot.val();
+						console.log('item: ' + item);
+						//var recipeObj = {};
+						item['.key'] = childSnapshot.key();
+						console.log('key from db: ' + childSnapshot.key());
 
-				//get array of recipe id's
-				// 		let recipesRef = new Firebase('https://recipe-keeper.firebaseio.com/web/data/box/recipes');
-				// 		recipesRef.on('value', function(snapshot) {
-				// 			console.log('results: ' + snapshot.val());
-				// 			let recipeObj = snapshot.val();
-				// 			console.log('recipes keys: ' + Object.keys(recipeObj));
-				// 			let recipeKeysAr = Object.keys(recipeObj);
-				// 			let boxRef = new Firebase('https://recipe-keeper.firebaseio.com/web/data/box');
-				// 			boxRef.on('value', function(snap2) {
-				// 				let boxObj = snap2;
-				// 			//for each item in array
-				// 				recipeKeysAr.forEach(function(key) {
-				// //mon 05.02.16 3:20pm need to verify results
-				// 					console.log('name: ' + boxObj.key.name);
-				// 					namesAr.push(boxObj.key.name);
-				// 				});
-				// 				console.log('length namesAr: ' + namesAr.length);
-				// 				//get the name
-				// 			});
-				// 		});
+						recipesAr.push(item);
+					}.bind(this)); //try
+					console.log('length recipesAr: ' + recipesAr.length);
+
+					this.setState({ //this.setState
+						recipes: recipesAr
+					});
+
+					console.log('key3: ' + this.state.recipes[2].key);
+				}.bind(this));
 			}
 		}, {
 			key: 'render',
@@ -19984,18 +19959,20 @@
 
 				//update firebase
 				var recipeId = _nodeUuid2.default.v4();
+				console.log('recipeId: ' + recipeId);
 				_this3.firebaseRef.update({
 					recipeId: {
 						name: name,
 						owner: 'cchung'
-					},
-					recipes: {
-						recipeId: {
-							ingredients: ingredientsTrim,
-							steps: []
-						}
 					}
-				});
+				}).bind(_this3);
+
+				_this3.firebaseRef.recipes.updateChildren({
+					recipeId: {
+						ingredients: ingredientsTrim,
+						steps: []
+					}
+				}).bind(_this3);
 
 				var form = document.getElementById('recipeForm');
 				form.reset();
@@ -20084,7 +20061,7 @@
 			'div',
 			{ className: 'recipeList' },
 			recipes.map(function (recipe) {
-				return _react2.default.createElement(_Recipe2.default, { key: recipe.id, name: recipe.name, onDelete: onDelete.bind(null, recipe.id) });
+				return _react2.default.createElement(_Recipe2.default, { key: recipe.key, name: recipe.name, onDelete: onDelete.bind(null, recipe.key) });
 			})
 		);
 	};
@@ -20127,9 +20104,10 @@
 			var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Recipe).call(this, props));
 
 			_this.getIngredients = function () {
-				var ingredientsStr = localStorage.getItem(_this.props.name);
+				//let ingredientsStr = localStorage.getItem(this.props.name);
 				//console.log('ingredientsStr: ' + ingredientsStr);
-				return ingredientsStr;
+				var ingredientsAr = [];
+				return ingredientsAr;
 			};
 
 			_this.updateIngredientsField = function (event) {
@@ -20187,6 +20165,7 @@
 			_this.state = {
 				isOpen: false,
 				name: _this.props.name,
+				key: _this.props.key,
 				ingredients: _this.getIngredients()
 			};
 			return _this;
@@ -20197,11 +20176,16 @@
 			value: function render() {
 				var _this2 = this;
 
+				var that = this;
+				console.log('props key: ' + this.props.key);
+				//console.log('props id: ' + this.props.id);
 				var key = this.props.key;
-				//		console.log('key: ' + key);
+				//ISSUE key prop undefined
+				//console.log('recipe key: ' + key);
 				var name = this.props.name;
+				console.log('recipe name: ' + name);
 				var onDelete = this.props.onDelete;
-				//		console.log('name: ' + name);
+				//console.log('recipe name: ' + name);
 
 				//using the recipe name as a unique identifier to set className and accordion display state
 				var classStr = void 0,
@@ -20209,15 +20193,39 @@
 				this.state.isOpen ? classStr = this.concatName() + ' padding' : classStr = this.concatName() + ' padding hidden';
 				name ? classStrOutter = 'recipe clear' : classStrOutter = 'recipe clear hidden';
 				var ingredientsAr = [];
-				var ingredientsStr = void 0;
-				var nameStr = this.props.name;
+
+				//pseudocode
+				//for key, get the ingredients ar
+				//this.recipesRef = this.firebaseRef.recipes;
+				this.recipesRef = new Firebase("https://recipe-keeper.firebaseio.com/web/data/recipes");
+				this.recipesRef.on('value', function (snapshot) {
+					var recipeObj = snapshot.val();
+					console.log('recipeObj: ' + recipeObj);
+					//05.04.16 11:30a getting back values from db but want to pass in the key dynamically
+					console.log('keyObj: ' + recipeObj['id1']);
+					console.log('recipeIngredients: ' + recipeObj['id1'].ingredients);
+					//find recipe with matching key and retrieve ingredients
+					var keysAr = Object.keys(recipeObj);
+					keysAr.forEach(function (mkey) {
+						if (mkey === key) {
+							var _ingredientsAr = recipeObj[key].ingredients;
+						}
+					});
+					this.setState({
+						ingredients: ingredientsAr
+					});
+				});
+				//for key, get the steps ar
+
+				//let ingredientsStr;
+				//let nameStr = this.props.name;
 				//console.log('this.props.data: ' + this.props.data);
-				ingredientsStr = localStorage.getItem(name);
+				//ingredientsStr = localStorage.getItem(name);
 				//console.log('ingredientsStr: ' + ingredientsStr);
-				if (ingredientsStr) {
-					//on data input to localStorage, spaces are trimmed so list should be strictly comma-delimited
-					ingredientsAr = ingredientsStr.split(',');
-				}
+				//if (ingredientsStr) {
+				//on data input to localStorage, spaces are trimmed so list should be strictly comma-delimited
+				//	ingredientsAr = ingredientsStr.split(',');
+				//}
 				// console.log('length ingredientsAr: ' + ingredientsAr.length);
 				var ingredientNodes = ingredientsAr.map(function (ingred, i) {
 					var keyStr = trimSpaces(nameStr) + ingred;
