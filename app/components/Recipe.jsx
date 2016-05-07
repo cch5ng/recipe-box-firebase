@@ -4,6 +4,10 @@ import React from 'react';
 import {Modal} from 'react-bootstrap';
 import {Button} from 'react-bootstrap';
 import {Input} from 'react-bootstrap';
+import Rebase from 're-base';
+
+var base = Rebase.createClass('https://recipe-keeper.firebaseio.com/web/data');
+var recipesRef = new Firebase("https://recipe-keeper.firebaseio.com/recipes");
 
 export default class Recipe extends React.Component {
 
@@ -13,15 +17,24 @@ export default class Recipe extends React.Component {
 		this.state = {
 			isOpen: false,
 			name: this.props.name,
-			key: this.props.key,
+			//key: curKey,
 			ingredients: this.props.ingredients
 		}
 	}
 
 	render() {
-		var key = this.props.key;
-//ISSUE key prop undefined
+//TODO to get the key for the current recipe
+	//maybe need to get the array of keys Object.getKeys();
+	//then make a match for the current name to a key (do a for in iteration)
+	//maybe Array.filter?
 		var name = this.props.name;
+		// this.setState({
+		// 	key: curKey
+		// });
+
+
+//		var key = this.props.key;
+//ISSUE key prop undefined
 
 		const onDelete = this.props.onDelete;
 
@@ -31,18 +44,31 @@ export default class Recipe extends React.Component {
 		(name) ? classStrOutter = 'recipe clear' : classStrOutter = 'recipe clear hidden';
 
 		let nameStr = this.props.name;
-		let ingreds = this.state.ingredients;
-		var ingredientNodes = ingreds.map(function(ingred, i) {
-			let keyStr = trimSpaces(nameStr) + ingred;
+		var ingreds = this.state.ingredients;
+		var ingredsAr = [];
+		//console.log('ingreds: ' + ingreds);
+		//console.log('typeof ingreds' + typeof ingreds);
+		//console.log('length ingreds' + ingreds.length);
+		//console.log('first ingred: ' + ingreds[0]);
+		if (typeof ingreds === 'object') {
+			for (var ing in ingreds) {
+				ingredsAr.push(ingreds[ing]);
+			}
+			//console.log('ingredsAr: ' + ingredsAr);
+		}
+		//ingredsAr = ingreds.split(',');
+//TODO broke this functionality late thurs 05.05.16
+		var ingredientNodes = ingredsAr.map(function(ingred, idx) {
+			let keyStr = trimSpaces(nameStr) + idx;
 			return (
-				<div className="ingredient" key={i} >
+				<div className="ingredient" key={ingred} >
 					{ingred}
 				</div>
 			);
 		});
 
 		return (
-			<div className={classStrOutter} key={key}>
+			<div className={classStrOutter} key={this.state.key}>
 				<p className="h4" onClick={this.toggleIngredients}>{name}</p>
 				<div className={classStr}>
 					<p className="h5">INGREDIENTS</p>
@@ -105,7 +131,9 @@ export default class Recipe extends React.Component {
 	 * @return {[type]}       [description]
 	 */
 	updateIngredientsField = (event) => {
-		this.setState({ingredients: event.target.value});
+		let ingredientsStr = event.target.value;
+		let ingredientsAr = ingredientsStr.split(',');
+		this.setState({ingredients: ingredientsAr});
 		//console.log('this.state.ingredients: ' + this.state.ingredients);
 	};
 
@@ -141,22 +169,59 @@ export default class Recipe extends React.Component {
 	editRecipe = (event) => {
 		event.preventDefault();
 
-	//parsing the ingredients, cleaning up the format so it will display cleanly later on
+		var keys;
+		var curKey;
+		var keysAr = [];
 		let name = this.props.name
-		//console.log('name: ' + name);
-		var ingredientsStr = this.state.ingredients;
-		var ingredientsAr = ingredientsStr.split(',');
+		let allRecipes = base.fetch('recipes', {
+			context: this,
+			then(data) {
+				console.log('data: ' + data);
+				keys = Object.keys(data);
+				console.log('keys: ' + keys);
+				console.log('typeof keys: ' + typeof keys);
+
+		//ISSUE error in logic; no matter which recipe is edited, the ingredients are always overwriting id3 recipe
+				for (var mkey in keys) {
+					console.log('name: ' + name);
+					console.log('mkey: ' + mkey);
+					console.log('keys[mkey]: ' + keys[mkey]);
+					console.log('data[keys[mkey]].name: ' + data[keys[mkey]].name);
+					if (data[keys[mkey]].name === name) {
+						curKey = keys[mkey];
+					}
+				}
+				console.log('curKey: ' + curKey);
+			}
+		});
+
+	//parsing the ingredients, cleaning up the format so it will display cleanly later on
+		let ingredientsAr = this.state.ingredients;
 		var ingredientsTrim = [];
 		ingredientsAr.forEach(function(item) {
 			var itemCopy = item.slice(0).trim();
 			ingredientsTrim.push(itemCopy);
 		});
 		var ingredientsStrClean = ingredientsTrim.join(',');
-		//console.log('ingredientsStrClean: ' + ingredientsStrClean);
+		//let curKey = this.state.key;
+		//console.log('curKey: ' + curKey);
+		let endpoint = 'recipes/' + curKey;
+		console.log('endpoint: ' + endpoint);
+
+//TODO update base (re-base)
+		base.post(endpoint, {
+			data: {name: name, ingredients: ingredientsStrClean},
+			then() {
+				console.log('updated recipe');
+			}
+		});
+
+//TODO update state (how to do this efficiently)
+
 
 	//updating localStorage
-		localStorage.setItem(name, ingredientsStrClean);
-		this.setState({ingredients: ingredientsStrClean});
+		//localStorage.setItem(name, ingredientsStrClean);
+		//this.setState({ingredients: ingredientsStrClean});
 
 		let form = document.getElementById('recipeEditForm');
 		form.reset();

@@ -126,10 +126,11 @@ export default class App extends React.Component {
 					data:  {name: name,
 							owner: 'cchung',
 							ingredients: ingredientsTrim
-					}//,
-				//then(){
+					},
+				then(){
+					console.log('inserted recipe');
 				//	Router.transitionTo('dashboard');
-				//}
+				}
 			});
 		}
 	};
