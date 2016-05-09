@@ -176,22 +176,22 @@ export default class Recipe extends React.Component {
 		let allRecipes = base.fetch('recipes', {
 			context: this,
 			then(data) {
-				console.log('data: ' + data);
+				//console.log('data: ' + data);
 				keys = Object.keys(data);
-				console.log('keys: ' + keys);
-				console.log('typeof keys: ' + typeof keys);
+				//console.log('keys: ' + keys);
+				//console.log('typeof keys: ' + typeof keys);
 
 		//ISSUE error in logic; no matter which recipe is edited, the ingredients are always overwriting id3 recipe
 				for (var mkey in keys) {
-					console.log('name: ' + name);
-					console.log('mkey: ' + mkey);
-					console.log('keys[mkey]: ' + keys[mkey]);
-					console.log('data[keys[mkey]].name: ' + data[keys[mkey]].name);
+					//console.log('name: ' + name);
+					//console.log('mkey: ' + mkey);
+					//console.log('keys[mkey]: ' + keys[mkey]);
+					//console.log('data[keys[mkey]].name: ' + data[keys[mkey]].name);
 					if (data[keys[mkey]].name === name) {
 						curKey = keys[mkey];
 					}
 				}
-				console.log('curKey: ' + curKey);
+				//console.log('curKey: ' + curKey);
 			}
 		});
 
@@ -208,20 +208,13 @@ export default class Recipe extends React.Component {
 		let endpoint = 'recipes/' + curKey;
 		console.log('endpoint: ' + endpoint);
 
-//TODO update base (re-base)
+		//update base (re-base)
 		base.post(endpoint, {
 			data: {name: name, ingredients: ingredientsStrClean},
 			then() {
 				console.log('updated recipe');
 			}
 		});
-
-//TODO update state (how to do this efficiently)
-
-
-	//updating localStorage
-		//localStorage.setItem(name, ingredientsStrClean);
-		//this.setState({ingredients: ingredientsStrClean});
 
 		let form = document.getElementById('recipeEditForm');
 		form.reset();

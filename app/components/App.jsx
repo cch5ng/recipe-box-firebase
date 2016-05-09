@@ -107,11 +107,10 @@ export default class App extends React.Component {
 	 */
 	addRecipe = (event) => {
 		if (this.state.nameValid === 'success') {
+			let name = document.getElementById('recipeName').value;
 			event.preventDefault();
 
 			//parsing the ingredients, cleaning up the format so it will display cleanly later on
-			let name = document.getElementById('recipeName').value;
-			console.log('name: ' + name);
 			var ingredientsStr = document.getElementById('recipeIngredients').value;
 			var ingredientsAr = ingredientsStr.split(',');
 			//stores final array of ingredients strings, trimmed
@@ -140,13 +139,32 @@ export default class App extends React.Component {
 	 * @param  {[type]} event [description]
 	 * @return {[type]}       [description]
 	 */
+//TODO
 	validationState = (event) => {
-		let matchCount;
+		this.setState({
+			nameValid: 'success'
+		})
 		let curName = event.target.value;
-		if (localStorage.getItem(curName)) {
-			this.setState({nameValid: 'error'});
-		} else {
-			this.setState({nameValid: 'success'});
+//pseudocode
+//from curState, get an array of current names
+	//verify whether the current name matches any of array elements
+		let namesAr = [];
+		let recipesAr = this.state.recipes;
+		let keysAr = [];
+		recipesAr.map(function(recipe) {
+			console.log('recipe.name' + recipe.name);
+			if (recipe.name === curName) {
+				namesAr.push(recipe.name);
+			}
+		});
+		console.log('namesAr: ' + namesAr);
+
+		for (let i = 0; i < namesAr.length; i++) {
+			if (curName === namesAr[i]) {
+				this.setState({nameValid: 'error'});
+			} else {
+				this.setState({nameValid: 'success'});
+			}
 		}
 	};
 
@@ -156,6 +174,7 @@ export default class App extends React.Component {
 	 * @return {[type]}    [description]
 	 */
 	deleteRecipe = (id) => {
+//TODO swap local storage with firebase functions
 		let name;
 		let recipes = this.state.recipes;
 
@@ -164,7 +183,7 @@ export default class App extends React.Component {
 				name = recipe.name
 			}
 		})
-		localStorage.removeItem(name);
+		//localStorage.removeItem(name);
 
 		//console.log('recipe id to delete: ' + id);
 		this.setState({
@@ -173,15 +192,17 @@ export default class App extends React.Component {
 		//console.log('typeof recipes from deleteRecipe: ' + typeof recipes);
 	};
 
+//TODO verify not used any more
 	/**
 	 * Gets recipe names from firebase
 	 * @return [String] Array of strings, recipe names
 	 */
-	getNames = () => {
+	/*getNames = () => {
 		let keys = [], namesAr = [];
 
 
 
 		return namesAr;
 	};
+	*/
 }
