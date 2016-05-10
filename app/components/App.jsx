@@ -2,7 +2,6 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-//import '../startup.js';
 import Recipes from './Recipes.jsx';
 import uuid from 'node-uuid';
 import {Modal} from 'react-bootstrap';
@@ -128,7 +127,6 @@ export default class App extends React.Component {
 					},
 				then(){
 					console.log('inserted recipe');
-				//	Router.transitionTo('dashboard');
 				}
 			});
 		}
@@ -139,15 +137,11 @@ export default class App extends React.Component {
 	 * @param  {[type]} event [description]
 	 * @return {[type]}       [description]
 	 */
-//TODO
 	validationState = (event) => {
 		this.setState({
 			nameValid: 'success'
 		})
 		let curName = event.target.value;
-//pseudocode
-//from curState, get an array of current names
-	//verify whether the current name matches any of array elements
 		let namesAr = [];
 		let recipesAr = this.state.recipes;
 		let keysAr = [];
@@ -173,36 +167,16 @@ export default class App extends React.Component {
 	 * @param  {String} id - Recipe id
 	 * @return {[type]}    [description]
 	 */
-	deleteRecipe = (id) => {
-//TODO swap local storage with firebase functions
-		let name;
-		let recipes = this.state.recipes;
+	deleteRecipe = (key) => {
+		let recipesRef = new Firebase('https://recipe-keeper.firebaseio.com/web/data/recipes/');
 
-		recipes.forEach(recipe => {
-			if (recipe.id === id) {
-				name = recipe.name
+		var onComplete = function(error) {
+			if (error) {
+				console.log('synchronization issue: ' + error);
+			} else {
+				console.log('synchronization succeeded');
 			}
-		})
-		//localStorage.removeItem(name);
-
-		//console.log('recipe id to delete: ' + id);
-		this.setState({
-			recipes: this.state.recipes.filter(recipe => recipe.id !== id)
-		})
-		//console.log('typeof recipes from deleteRecipe: ' + typeof recipes);
+		}
+		recipesRef.child(key).remove(onComplete);
 	};
-
-//TODO verify not used any more
-	/**
-	 * Gets recipe names from firebase
-	 * @return [String] Array of strings, recipe names
-	 */
-	/*getNames = () => {
-		let keys = [], namesAr = [];
-
-
-
-		return namesAr;
-	};
-	*/
 }

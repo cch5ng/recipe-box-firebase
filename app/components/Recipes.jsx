@@ -16,6 +16,3 @@ export default ({recipes, onDelete}) => {
 		</div>
 	)
 }
-
-// 
-//<ul />

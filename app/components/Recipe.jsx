@@ -23,19 +23,7 @@ export default class Recipe extends React.Component {
 	}
 
 	render() {
-//TODO to get the key for the current recipe
-	//maybe need to get the array of keys Object.getKeys();
-	//then make a match for the current name to a key (do a for in iteration)
-	//maybe Array.filter?
 		var name = this.props.name;
-		// this.setState({
-		// 	key: curKey
-		// });
-
-
-//		var key = this.props.key;
-//ISSUE key prop undefined
-
 		const onDelete = this.props.onDelete;
 
 		//using the recipe name as a unique identifier to set className and accordion display state
@@ -46,18 +34,11 @@ export default class Recipe extends React.Component {
 		let nameStr = this.props.name;
 		var ingreds = this.state.ingredients;
 		var ingredsAr = [];
-		//console.log('ingreds: ' + ingreds);
-		//console.log('typeof ingreds' + typeof ingreds);
-		//console.log('length ingreds' + ingreds.length);
-		//console.log('first ingred: ' + ingreds[0]);
 		if (typeof ingreds === 'object') {
 			for (var ing in ingreds) {
 				ingredsAr.push(ingreds[ing]);
 			}
-			//console.log('ingredsAr: ' + ingredsAr);
 		}
-		//ingredsAr = ingreds.split(',');
-//TODO broke this functionality late thurs 05.05.16
 		var ingredientNodes = ingredsAr.map(function(ingred, idx) {
 			let keyStr = trimSpaces(nameStr) + idx;
 			return (
@@ -114,17 +95,6 @@ export default class Recipe extends React.Component {
 		);
 	}
 
-	// /**
-	//  * Gets ingredients from localStorage and puts them in state.
-	//  * @return {[type]} [description]
-	//  */
-	// getIngredients = () => {
-	// 	//let ingredientsStr = localStorage.getItem(this.props.name);
-	// 	//console.log('ingredientsStr: ' + ingredientsStr);
-	// 	let ingredientsAr = []
-	// 	return ingredientsAr;
-	// };
-
 	/**
 	 * Updates state with edit form values
 	 * @param  {[type]} event [description]
@@ -134,7 +104,6 @@ export default class Recipe extends React.Component {
 		let ingredientsStr = event.target.value;
 		let ingredientsAr = ingredientsStr.split(',');
 		this.setState({ingredients: ingredientsAr});
-		//console.log('this.state.ingredients: ' + this.state.ingredients);
 	};
 
 	/**
@@ -176,22 +145,13 @@ export default class Recipe extends React.Component {
 		let allRecipes = base.fetch('recipes', {
 			context: this,
 			then(data) {
-				//console.log('data: ' + data);
 				keys = Object.keys(data);
-				//console.log('keys: ' + keys);
-				//console.log('typeof keys: ' + typeof keys);
 
-		//ISSUE error in logic; no matter which recipe is edited, the ingredients are always overwriting id3 recipe
 				for (var mkey in keys) {
-					//console.log('name: ' + name);
-					//console.log('mkey: ' + mkey);
-					//console.log('keys[mkey]: ' + keys[mkey]);
-					//console.log('data[keys[mkey]].name: ' + data[keys[mkey]].name);
 					if (data[keys[mkey]].name === name) {
 						curKey = keys[mkey];
 					}
 				}
-				//console.log('curKey: ' + curKey);
 			}
 		});
 
@@ -203,16 +163,13 @@ export default class Recipe extends React.Component {
 			ingredientsTrim.push(itemCopy);
 		});
 		var ingredientsStrClean = ingredientsTrim.join(',');
-		//let curKey = this.state.key;
-		//console.log('curKey: ' + curKey);
 		let endpoint = 'recipes/' + curKey;
-		console.log('endpoint: ' + endpoint);
+		//console.log('endpoint: ' + endpoint);
 
-		//update base (re-base)
 		base.post(endpoint, {
 			data: {name: name, ingredients: ingredientsStrClean},
 			then() {
-				console.log('updated recipe');
+				//console.log('updated recipe');
 			}
 		});
 
