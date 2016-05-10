@@ -18,7 +18,8 @@ export default class Recipe extends React.Component {
 			isOpen: false,
 			name: this.props.name,
 			//key: curKey,
-			ingredients: this.props.ingredients
+			ingredients: this.props.ingredients,
+			steps: this.props.steps
 		}
 	}
 
@@ -48,13 +49,35 @@ export default class Recipe extends React.Component {
 			);
 		});
 
+//refactor this is a bit redundant with ingredients
+		var steps = this.state.steps;
+		var stepsAr = [];
+		if (typeof steps === 'object') {
+			for (var step in steps) {
+				stepsAr.push(steps[step]);
+			}
+		}
+		var stepNodes = stepsAr.map(function(step, idx) {
+			let keyStr = trimSpaces(nameStr) + 'Ing' + idx;
+			return (
+				<div className="ingredient" key={step} >
+					{step}
+				</div>
+			);
+		});
+
+
 		return (
 			<div className={classStrOutter} key={this.state.key}>
 				<p className="h4" onClick={this.toggleIngredients}>{name}</p>
 				<div className={classStr}>
-					<p className="h5">INGREDIENTS</p>
+					<p className="h5">Ingredients</p>
 					<div className="ingredientList">
 						{ingredientNodes}
+					</div>
+					<p className="h5">Steps</p>
+					<div className="ingredientList">
+						{stepNodes}
 					</div>
 					<div className="button-section">
 						{onDelete ? this.renderDelete() : null}
