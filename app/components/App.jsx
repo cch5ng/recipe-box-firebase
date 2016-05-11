@@ -78,6 +78,12 @@ export default class App extends React.Component {
 									<label htmlFor="recipe-ingredients">Ingredients</label>
 									<input type="text" className="form-control" id="recipeIngredients" name="recipeIngredients" placeholder="enter ingredients separated by commas" size="50" />
 								</div>
+								<div className="form-group">
+									<label htmlFor="recipe-steps">Steps</label>
+									<textarea className="form-control" id="recipeSteps" name="recipeSteps" placeholder="enter steps separated by line break" rows="10" cols="50"></textarea>
+								</div>
+
+
 							</form>
 						</Modal.Body>
 
@@ -119,11 +125,22 @@ export default class App extends React.Component {
 				ingredientsTrim.push(itemCopy);
 			});
 
+			var stepsStr = document.getElementById('recipeSteps').value;
+			console.log('stepsStr: ' + stepsStr);
+			console.log('typeof stepsStr: ' + typeof stepsStr);
+//need to test this step
+//Issue 051016 b/c data inserted in db is single field with string with '/n'
+			var stepsAr = stepsStr.split('\n');
+			console.log('stepsAr: ' + stepsAr);
+			console.log('typeof stepsAr: ' + typeof stepsAr);
+			console.log('length stepsAr: ' + stepsAr.length);
+
 		//update firebase
 			base.push('recipes', {
 					data:  {name: name,
 							owner: 'cchung',
-							ingredients: ingredientsTrim
+							ingredients: ingredientsTrim,
+							steps: stepsAr
 					},
 				then(){
 					console.log('inserted recipe');

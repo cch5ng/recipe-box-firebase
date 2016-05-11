@@ -51,6 +51,8 @@ export default class Recipe extends React.Component {
 
 //refactor this is a bit redundant with ingredients
 		var steps = this.state.steps;
+		console.log('steps from db: ' + steps);
+		console.log('typeof steps from db: ' + typeof steps);
 		var stepsAr = [];
 		if (typeof steps === 'object') {
 			for (var step in steps) {
