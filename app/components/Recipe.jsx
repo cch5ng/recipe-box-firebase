@@ -80,8 +80,8 @@ export default class Recipe extends React.Component {
 						{stepNodes}
 					</div>
 					<div className="button-section">
-						{onDelete ? this.renderDelete() : null}
 						<Button bsStyle="default" onClick={() => this.setState({ show: true})}>Edit</Button>
+						{onDelete ? this.renderDelete() : null}
 						<div className="modal-container">
 							<Modal
 								show={this.state.show}
