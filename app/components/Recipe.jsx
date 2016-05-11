@@ -5,21 +5,26 @@ import {Modal} from 'react-bootstrap';
 import {Button} from 'react-bootstrap';
 import {Input} from 'react-bootstrap';
 import Rebase from 're-base';
+import uuid from 'node-uuid';
 
 var base = Rebase.createClass('https://recipe-keeper.firebaseio.com/web/data');
 var recipesRef = new Firebase("https://recipe-keeper.firebaseio.com/recipes");
+var stepsEditStr = '';
 
 export default class Recipe extends React.Component {
 
 	constructor(props) {
 		super(props);
 
+		let stepsStr = this.convertStepsObjToString(this.props.steps);
+
 		this.state = {
 			isOpen: false,
 			name: this.props.name,
 			//key: curKey,
 			ingredients: this.props.ingredients,
-			steps: this.props.steps
+			steps: this.props.steps,
+			stepsStr: stepsStr
 		}
 	}
 
@@ -41,7 +46,6 @@ export default class Recipe extends React.Component {
 			}
 		}
 		var ingredientNodes = ingredsAr.map(function(ingred, idx) {
-			let keyStr = trimSpaces(nameStr) + idx;
 			return (
 				<div className="ingredient" key={ingred} >
 					{ingred}
@@ -60,13 +64,18 @@ export default class Recipe extends React.Component {
 			}
 		}
 		var stepNodes = stepsAr.map(function(step, idx) {
-			let keyStr = trimSpaces(nameStr) + 'Ing' + idx;
+			let keyStr = uuid.v1();
+			//let keyStr = trimSpaces(nameStr) + 'Ing' + idx;
 			return (
-				<div className="ingredient" key={step} >
+				<div className="ingredient" key={keyStr} >
 					{step}
 				</div>
 			);
 		});
+//reusing below
+		stepsAr.forEach(function(step) {
+			stepsEditStr += step + '\n';
+		})
 
 
 		return (
@@ -105,6 +114,13 @@ export default class Recipe extends React.Component {
 											<label htmlFor="recipeIngredientsEdit">Ingredients</label>
 											<input type="text" className="form-control" id="recipeIngredientsEdit" name="recipeIngredientsEdit" value={this.state.ingredients} onChange={this.updateIngredientsField} size="50" />
 										</div>
+
+										<div className="form-group">
+											<label htmlFor="recipeStepsEdit">Steps</label>
+											<textarea className="form-control" id="recipeStepsEdit" name="recipeStepsEdit" value={this.state.stepsStr} onChange={this.updateStepsField} rows="10" cols="50"></textarea>
+										</div>
+
+
 									</form>
 								</Modal.Body>
 
@@ -129,6 +145,28 @@ export default class Recipe extends React.Component {
 		let ingredientsStr = event.target.value;
 		let ingredientsAr = ingredientsStr.split(',');
 		this.setState({ingredients: ingredientsAr});
+	};
+
+//same as above (updateIngredientsField)
+	/**
+	 * Updates state with edit form values
+	 * @param  {[type]} event [description]
+	 * @return {[type]}       [description]
+	 */
+	updateStepsField = (event) => {
+//Issue 051016 when try to edit steps, weird line break behavior
+
+		let stepsStr = event.target.value;
+		console.log('edit stepsStr: ' + stepsStr);
+		this.setState({stepsStr: stepsStr});
+		console.log('stepsStr from state: ' + stepsStr);
+
+		// let stepsAr = stepsStr.split('\n');
+		// this.setState({steps: stepsAr});
+		// stepsAr.forEach(function(step) {
+		// 	stepsEditStr += step + '\n';
+		// });
+
 	};
 
 	/**
@@ -188,11 +226,13 @@ export default class Recipe extends React.Component {
 			ingredientsTrim.push(itemCopy);
 		});
 		var ingredientsStrClean = ingredientsTrim.join(',');
+//Issue 051016 this is not getting updated in the db
+		let stepsAr = this.state.steps;
 		let endpoint = 'recipes/' + curKey;
 		//console.log('endpoint: ' + endpoint);
 
 		base.post(endpoint, {
-			data: {name: name, ingredients: ingredientsStrClean},
+			data: {name: name, ingredients: ingredientsStrClean, steps: stepsAr},
 			then() {
 				//console.log('updated recipe');
 			}
@@ -205,7 +245,47 @@ export default class Recipe extends React.Component {
 	renderDelete = () => {
 		return <Button bsStyle="danger" data={this.state.name} onClick={this.props.onDelete} >Delete</Button>
 	};
+
+//TODO update doc
+	///**
+	// * Updates localStorage and state with edit form ingredients values
+	// * @param  {[type]} event [description]
+	// * @return {[type]}       [description]
+	// */
+// 	getStepsStr = () => {
+// 		let stepsSt = '';
+// 		let stepsAr = this.state.steps;
+// 		if (stepsAr) {
+// 			for (var s in stepsAr) {
+// 				stepsSt += stepsAr[s] + '\n';
+// 			}
+// //			stepsAr.forEach(function(step) {
+// //				stepsSt += step + '\n';
+// //			});
+// 		}
+// 		return stepsSt;
+// 	}
+
+	/**
+	 *
+	 *
+	 */
+	convertStepsObjToString = (stepObjects) => {
+		let stepsStr = '';
+		///let stepsAr = this.state.steps;
+		if (stepObjects) {
+			for (let step in stepObjects) {
+				stepsStr += stepObjects[step] + '\n';
+			}
+//			stepsAr.forEach(function(step) {
+//				stepsSt += step + '\n';
+//			});
+		}
+		return stepsStr;
+	}
+
 }
+
 
 /**
  * Helper that removes spaces between chars/words; used to create recipe name
