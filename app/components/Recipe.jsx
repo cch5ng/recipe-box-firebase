@@ -41,6 +41,7 @@ export default class Recipe extends React.Component {
 		let nameStr = this.props.name;
 		var ingreds = this.state.ingredients;
 		var ingredsAr = [];
+		//firebase stores lists in object format
 		if (typeof ingreds === 'object') {
 			for (var ing in ingreds) {
 				ingredsAr.push(ingreds[ing]);
@@ -59,6 +60,7 @@ export default class Recipe extends React.Component {
 		console.log('steps from db: ' + steps);
 		console.log('typeof steps from db: ' + typeof steps);
 		var stepsAr = [];
+		//firebase stores lists in object format
 		if (typeof steps === 'object') {
 			for (var step in steps) {
 				stepsAr.push(steps[step]);
@@ -144,33 +146,17 @@ export default class Recipe extends React.Component {
 	 */
 	updateIngredientsField = (event) => {
 		let ingredientsStr = event.target.value;
-		console.log('ingredientsStr from form: ' + ingredientsStr);
-		console.log('ingredients from state: ' + this.state.ingredients);
-		console.log('typeof ingredients from state: ' + typeof this.state.ingredients);
-		//let ingredientsAr = ingredientsStr.split(',');
 		this.setState({ingredientsStr: ingredientsStr});
 	};
 
-//same as above (updateIngredientsField)
 	/**
 	 * Updates state with edit form values
 	 * @param  {[type]} event [description]
 	 * @return {[type]}       [description]
 	 */
 	updateStepsField = (event) => {
-//Issue 051016 when try to edit steps, weird line break behavior
-
 		let stepsStr = event.target.value;
-		console.log('edit stepsStr: ' + stepsStr);
 		this.setState({stepsStr: stepsStr});
-		console.log('stepsStr from state: ' + stepsStr);
-
-		// let stepsAr = stepsStr.split('\n');
-		// this.setState({steps: stepsAr});
-		// stepsAr.forEach(function(step) {
-		// 	stepsEditStr += step + '\n';
-		// });
-
 	};
 
 	/**
@@ -230,16 +216,19 @@ export default class Recipe extends React.Component {
 			ingredientsTrim.push(ingredient.trim());
 		});
 
-		//var ingredientsStrClean = ingredientsTrim.join(',');
 		let stepsAr = this.state.stepsStr.split('\n');
 		let endpoint = 'recipes/' + curKey;
-
-//something is wrong with updating the ingredients in db on change (check whether format is array vs string)
+		//update firebase
 		base.post(endpoint, {
 			data: {name: name, ingredients: ingredientsTrim, steps: stepsAr},
 			then() {
-				//console.log('updated recipe');
 			}
+		});
+
+		//updating state for the read view of the recipe detail
+		this.setState({
+			ingredients: this.convertIngredientStrToObject(this.state.ingredientsStr),
+			steps: this.convertStepStrToObject(this.state.stepsStr)
 		});
 
 		let form = document.getElementById('recipeEditForm');
@@ -251,7 +240,7 @@ export default class Recipe extends React.Component {
 	};
 
 	/**
-	 *
+	 * Convert object from firebase to string for form text area display
 	 *
 	 */
 	convertStepToString = (objects) => {
@@ -270,7 +259,7 @@ export default class Recipe extends React.Component {
 	}
 
 	/**
-	 *
+	 * Convert object from firebase to string for form input text display
 	 *
 	 */
 	convertIngredientToString = (objects) => {
@@ -288,7 +277,31 @@ export default class Recipe extends React.Component {
 		return itemStr;
 	}
 
+	/**
+	 * Convert latest form input text string to object for firebase update
+	 *
+	 */
+	convertIngredientStrToObject = (str) => {
+		let ingObj = {};
+		let ingAr = str.split(',');
+		ingAr.forEach((ingred, idx) => {
+			ingObj[idx] = ingred;
+		});
+		return ingObj;
+	}
 
+	/**
+	 * Convert latest form text area string to object for firebase update
+	 *
+	 */
+	convertStepStrToObject = (str) => {
+		let stepObj = {};
+		let stepAr = str.split('\n');
+		stepAr.forEach((step, idx) => {
+			stepObj[idx] = step;
+		});
+		return stepObj;
+	}
 }
 
 
