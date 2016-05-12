@@ -16,13 +16,14 @@ export default class Recipe extends React.Component {
 	constructor(props) {
 		super(props);
 
-		let stepsStr = this.convertStepsObjToString(this.props.steps);
+		let stepsStr = this.convertStepToString(this.props.steps);
+		let ingredientsStr = this.convertIngredientToString(this.props.ingredients);
 
 		this.state = {
 			isOpen: false,
 			name: this.props.name,
-			//key: curKey,
 			ingredients: this.props.ingredients,
+			ingredientsStr: ingredientsStr,
 			steps: this.props.steps,
 			stepsStr: stepsStr
 		}
@@ -112,7 +113,7 @@ export default class Recipe extends React.Component {
 										</div>
 										<div className="form-group">
 											<label htmlFor="recipeIngredientsEdit">Ingredients</label>
-											<input type="text" className="form-control" id="recipeIngredientsEdit" name="recipeIngredientsEdit" value={this.state.ingredients} onChange={this.updateIngredientsField} size="50" />
+											<input type="text" className="form-control" id="recipeIngredientsEdit" name="recipeIngredientsEdit" value={this.state.ingredientsStr} onChange={this.updateIngredientsField} size="50" />
 										</div>
 
 										<div className="form-group">
@@ -143,8 +144,11 @@ export default class Recipe extends React.Component {
 	 */
 	updateIngredientsField = (event) => {
 		let ingredientsStr = event.target.value;
-		let ingredientsAr = ingredientsStr.split(',');
-		this.setState({ingredients: ingredientsAr});
+		console.log('ingredientsStr from form: ' + ingredientsStr);
+		console.log('ingredients from state: ' + this.state.ingredients);
+		console.log('typeof ingredients from state: ' + typeof this.state.ingredients);
+		//let ingredientsAr = ingredientsStr.split(',');
+		this.setState({ingredientsStr: ingredientsStr});
 	};
 
 //same as above (updateIngredientsField)
@@ -219,20 +223,20 @@ export default class Recipe extends React.Component {
 		});
 
 	//parsing the ingredients, cleaning up the format so it will display cleanly later on
-		let ingredientsAr = this.state.ingredients;
+		let curIngredientsAr = this.state.ingredientsStr.split(',');
 		var ingredientsTrim = [];
-		ingredientsAr.forEach(function(item) {
-			var itemCopy = item.slice(0).trim();
-			ingredientsTrim.push(itemCopy);
-		});
-		var ingredientsStrClean = ingredientsTrim.join(',');
-//Issue 051016 this is not getting updated in the db
-		let stepsAr = this.state.steps;
-		let endpoint = 'recipes/' + curKey;
-		//console.log('endpoint: ' + endpoint);
 
+		curIngredientsAr.forEach((ingredient) => {
+			ingredientsTrim.push(ingredient.trim());
+		});
+
+		//var ingredientsStrClean = ingredientsTrim.join(',');
+		let stepsAr = this.state.stepsStr.split('\n');
+		let endpoint = 'recipes/' + curKey;
+
+//something is wrong with updating the ingredients in db on change (check whether format is array vs string)
 		base.post(endpoint, {
-			data: {name: name, ingredients: ingredientsStrClean, steps: stepsAr},
+			data: {name: name, ingredients: ingredientsTrim, steps: stepsAr},
 			then() {
 				//console.log('updated recipe');
 			}
@@ -246,43 +250,44 @@ export default class Recipe extends React.Component {
 		return <Button bsStyle="danger" data={this.state.name} onClick={this.props.onDelete} >Delete</Button>
 	};
 
-//TODO update doc
-	///**
-	// * Updates localStorage and state with edit form ingredients values
-	// * @param  {[type]} event [description]
-	// * @return {[type]}       [description]
-	// */
-// 	getStepsStr = () => {
-// 		let stepsSt = '';
-// 		let stepsAr = this.state.steps;
-// 		if (stepsAr) {
-// 			for (var s in stepsAr) {
-// 				stepsSt += stepsAr[s] + '\n';
-// 			}
-// //			stepsAr.forEach(function(step) {
-// //				stepsSt += step + '\n';
-// //			});
-// 		}
-// 		return stepsSt;
-// 	}
+	/**
+	 *
+	 *
+	 */
+	convertStepToString = (objects) => {
+		let itemStr = '';
+		let length = Object.keys(objects).length;
+		if (objects) {
+			for (let item in objects) {
+				if (item < length - 1) {
+					itemStr += objects[item] + '\n';
+				} else {
+					itemStr += objects[item]
+				}
+			}
+		}
+		return itemStr;
+	}
 
 	/**
 	 *
 	 *
 	 */
-	convertStepsObjToString = (stepObjects) => {
-		let stepsStr = '';
-		///let stepsAr = this.state.steps;
-		if (stepObjects) {
-			for (let step in stepObjects) {
-				stepsStr += stepObjects[step] + '\n';
+	convertIngredientToString = (objects) => {
+		let itemStr = '';
+		let length = Object.keys(objects).length;
+		if (objects) {
+			for (let item in objects) {
+				if (item < length - 1) {
+					itemStr += objects[item] + ',';
+				} else {
+					itemStr += objects[item]
+				}
 			}
-//			stepsAr.forEach(function(step) {
-//				stepsSt += step + '\n';
-//			});
 		}
-		return stepsStr;
+		return itemStr;
 	}
+
 
 }
 
