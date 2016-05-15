@@ -218,12 +218,26 @@ export default class Recipe extends React.Component {
 
 		let stepsAr = this.state.stepsStr.split('\n');
 		let endpoint = 'recipes/' + curKey;
-		//update firebase
-		base.post(endpoint, {
-			data: {name: name, ingredients: ingredientsTrim, steps: stepsAr},
-			then() {
-			}
-		});
+
+		//authenticate session before insert
+		let authData = base.getAuth();
+		if (authData) {
+			base.post(endpoint, {
+				data: {name: name, ingredients: ingredientsTrim, steps: stepsAr},
+				then() {
+				}
+			});
+		} else {
+			base.authWithOAuthPopup('google', (error, authData) => {
+				if (error) {
+					console.log("Login Failed!", error);
+				} else {
+					console.log("Authenticated successfully with payload:", authData);
+				}
+			}, {
+				remember: 'sessionOnly'
+			});
+		}
 
 		//updating state for the read view of the recipe detail
 		this.setState({

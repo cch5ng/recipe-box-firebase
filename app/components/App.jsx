@@ -39,6 +39,7 @@ export default class App extends React.Component {
 					<nav className="navbar navbar-default">
 						<div className="navbar-header">
 							<a className="navbar-brand" href="#">Recipe Box</a>
+							<button className="btn btn-default navbar-btn navbar-right" onClick={this.googleLogin} >Login</button>
 						</div>
 					</nav>
 				</div>
@@ -126,26 +127,34 @@ export default class App extends React.Component {
 			});
 
 			var stepsStr = document.getElementById('recipeSteps').value;
-			console.log('stepsStr: ' + stepsStr);
-			console.log('typeof stepsStr: ' + typeof stepsStr);
-//need to test this step
-//Issue 051016 b/c data inserted in db is single field with string with '/n'
 			var stepsAr = stepsStr.split('\n');
-			console.log('stepsAr: ' + stepsAr);
-			console.log('typeof stepsAr: ' + typeof stepsAr);
-			console.log('length stepsAr: ' + stepsAr.length);
 
-		//update firebase
-			base.push('recipes', {
+			//authenticate session before insert
+			let authData = base.getAuth();
+			if (authData) {
+				base.push('recipes', {
 					data:  {name: name,
-							owner: 'cchung',
-							ingredients: ingredientsTrim,
-							steps: stepsAr
+						owner: 'cchung',
+						ingredients: ingredientsTrim,
+						steps: stepsAr
 					},
-				then(){
-					console.log('inserted recipe');
-				}
-			});
+					then(){
+						console.log('inserted recipe');
+					}
+				});
+			} else {
+				base.authWithOAuthPopup('google', (error, authData) => {
+					if (error) {
+						console.log("Login Failed!", error);
+					} else {
+						console.log("Authenticated successfully with payload:", authData);
+						//update firebase
+						
+					}
+				}, {
+					remember: 'sessionOnly'
+				});
+			}
 		}
 	};
 
@@ -194,6 +203,41 @@ export default class App extends React.Component {
 				console.log('synchronization succeeded');
 			}
 		}
-		recipesRef.child(key).remove(onComplete);
+
+		//authenticate session before insert
+		let authData = recipesRef.getAuth();
+		if (authData) {
+			//update firebase
+			recipesRef.child(key).remove(onComplete);
+		} else {
+			recipesRef.authWithOAuthPopup('google', (error, authData) => {
+				if (error) {
+					console.log("Login Failed!", error);
+				} else {
+					console.log("Authenticated successfully with payload:", authData);
+				}
+			}, {
+				remember: 'sessionOnly'
+			});
+		}
 	};
+
+	/**
+	 * Triggers rebase authWithOAuthPopup() function for google-based login.
+	 * @param  {String} id - Recipe id
+	 * @return {[type]}    [description]
+	 */
+	googleLogin = () => {
+		base.authWithOAuthPopup('google', (error, authData) => {
+			if (error) {
+				console.log("Login Failed!", error);
+			} else {
+				console.log("Authenticated successfully with payload:", authData);
+//TODO save token to localstorage
+			}
+		}, {
+			remember: 'sessionOnly'
+		});
+	}
 }
+//<p className="navbar-text navbar-right">Signed in as <a href="#" className="navbar-link">Mark Otto</a></p>
