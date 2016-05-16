@@ -10,6 +10,7 @@ import {Input} from 'react-bootstrap';
 import Rebase from 're-base';
 
 var base = Rebase.createClass('https://recipe-keeper.firebaseio.com/web/data');
+var recipesRef = new Firebase('https://recipe-keeper.firebaseio.com/web/data/recipes/');
 
 export default class App extends React.Component {
 	constructor(props) {
@@ -39,7 +40,9 @@ export default class App extends React.Component {
 					<nav className="navbar navbar-default">
 						<div className="navbar-header">
 							<a className="navbar-brand" href="#">Recipe Box</a>
-							<button className="btn btn-default navbar-btn navbar-right" onClick={this.googleLogin} >Login</button>
+							<button className="btn btn-default navbar-btn" onClick={this.googleLogin} >Login with Google</button>
+							<button className="btn btn-default navbar-btn navbar-right" onClick={this.logOut} >Log Out</button>
+
 						</div>
 					</nav>
 				</div>
@@ -194,8 +197,6 @@ export default class App extends React.Component {
 	 * @return {[type]}    [description]
 	 */
 	deleteRecipe = (key) => {
-		let recipesRef = new Firebase('https://recipe-keeper.firebaseio.com/web/data/recipes/');
-
 		var onComplete = function(error) {
 			if (error) {
 				console.log('synchronization issue: ' + error);
@@ -239,5 +240,16 @@ export default class App extends React.Component {
 			remember: 'sessionOnly'
 		});
 	}
+
+	/**
+	 * Log out of firebase
+	 * @param  {String} id - Recipe id
+	 * @return {[type]}    [description]
+	 */
+	logOut = () => {
+		base.unauth();
+		if (recipesRef.getAuth()) {
+			recipesRef.unauth();
+		}
+	}
 }
-//<p className="navbar-text navbar-right">Signed in as <a href="#" className="navbar-link">Mark Otto</a></p>
