@@ -5,9 +5,7 @@
 
 ## Warning
 
-* Since user authentication has not been implemented I turned of write-access to the firebase backend
-* After user authentication is added, the write functions should be enabled
-* In the meantime, you can fork the repo and replace the Firebase db urls with your own Firebase instance. ('https://recipe-keeper.firebaseio.com')
+* For this iteration, user authentication is being handled with Google login.
 
 ## Comments/Concerns
 
