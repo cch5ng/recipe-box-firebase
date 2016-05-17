@@ -7,7 +7,7 @@ import {Modal} from 'react-bootstrap';
 import {Button} from 'react-bootstrap';
 import {Input} from 'react-bootstrap';
 
-export default ({recipes, onDelete}) => {
+export default ({recipes, onDelete, onEdit}) => {
 	return (
 		<div className="recipeList">
 			{recipes.map(recipe =>

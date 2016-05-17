@@ -42,7 +42,6 @@ export default class App extends React.Component {
 							<a className="navbar-brand" href="#">Recipe Box</a>
 							<button className="btn btn-default navbar-btn" onClick={this.googleLogin} >Login with Google</button>
 							<button className="btn btn-default navbar-btn navbar-right" onClick={this.logOut} >Log Out</button>
-
 						</div>
 					</nav>
 				</div>
@@ -142,7 +141,7 @@ export default class App extends React.Component {
 						steps: stepsAr
 					},
 					then(){
-						console.log('inserted recipe');
+						//console.log('inserted recipe');
 					}
 				});
 			} else {
@@ -150,9 +149,8 @@ export default class App extends React.Component {
 					if (error) {
 						console.log("Login Failed!", error);
 					} else {
-						console.log("Authenticated successfully with payload:", authData);
+						console.log("Authenticated successfully with payload");
 						//update firebase
-						
 					}
 				}, {
 					remember: 'sessionOnly'
@@ -175,12 +173,12 @@ export default class App extends React.Component {
 		let recipesAr = this.state.recipes;
 		let keysAr = [];
 		recipesAr.map(function(recipe) {
-			console.log('recipe.name' + recipe.name);
+			//console.log('recipe.name' + recipe.name);
 			if (recipe.name === curName) {
 				namesAr.push(recipe.name);
 			}
 		});
-		console.log('namesAr: ' + namesAr);
+		//console.log('namesAr: ' + namesAr);
 
 		for (let i = 0; i < namesAr.length; i++) {
 			if (curName === namesAr[i]) {
@@ -201,7 +199,7 @@ export default class App extends React.Component {
 			if (error) {
 				console.log('synchronization issue: ' + error);
 			} else {
-				console.log('synchronization succeeded');
+				//console.log('synchronization succeeded');
 			}
 		}
 
@@ -215,7 +213,7 @@ export default class App extends React.Component {
 				if (error) {
 					console.log("Login Failed!", error);
 				} else {
-					console.log("Authenticated successfully with payload:", authData);
+					console.log("Authenticated successfully with payload");
 				}
 			}, {
 				remember: 'sessionOnly'
@@ -233,7 +231,8 @@ export default class App extends React.Component {
 			if (error) {
 				console.log("Login Failed!", error);
 			} else {
-				console.log("Authenticated successfully with payload:", authData);
+				console.log("Authenticated successfully with payload");
+				base.onAuth(this.authDataCallback(authData));
 //TODO save token to localstorage
 			}
 		}, {
@@ -252,4 +251,32 @@ export default class App extends React.Component {
 			recipesRef.unauth();
 		}
 	}
+
+	// /**
+	//  * Verify authentication state
+	//  * @return {boolean}    true if current session is authenticated, false otherwise
+	//  */
+	// isAuthenticated = () => {
+	// 	let auth = false;
+	// 	if (base.getAuth() || recipesRef.getAuth()) {
+	// 		return true;
+	// 	} else {
+	// 		return auth;
+	// 	}
+	// }
+
+// //TODO
+// 	/**
+// 	 * 
+// 	 * @param
+// 	 * @return {boolean}    true if current session is authenticated, false otherwise
+// 	 */
+// 	authDataCallback = (authData) => {
+// 		if (authData) {
+// 			this.setState({isAuthenticated: true});
+// 		} else {
+// 			this.setState({isAuthenticated: false});
+// 		}
+// 	}
+
 }

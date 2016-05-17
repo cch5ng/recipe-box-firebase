@@ -32,6 +32,7 @@ export default class Recipe extends React.Component {
 	render() {
 		var name = this.props.name;
 		const onDelete = this.props.onDelete;
+		const onEdit = this.props.onEdit;
 
 		//using the recipe name as a unique identifier to set className and accordion display state
 		let classStr, classStrOutter;
@@ -57,8 +58,8 @@ export default class Recipe extends React.Component {
 
 //refactor this is a bit redundant with ingredients
 		var steps = this.state.steps;
-		console.log('steps from db: ' + steps);
-		console.log('typeof steps from db: ' + typeof steps);
+		//console.log('steps from db: ' + steps);
+		//console.log('typeof steps from db: ' + typeof steps);
 		var stepsAr = [];
 		//firebase stores lists in object format
 		if (typeof steps === 'object') {
@@ -94,7 +95,8 @@ export default class Recipe extends React.Component {
 						{stepNodes}
 					</div>
 					<div className="button-section">
-						<Button bsStyle="default" onClick={() => this.setState({ show: true})}>Edit</Button>
+						<Button bsStyle="default" onClick={this.editBtnClick}>Edit</Button>
+						{/*{onEdit ? this.renderEditBtn() : null}*/}
 						{onDelete ? this.renderDelete() : null}
 						<div className="modal-container">
 							<Modal
@@ -227,28 +229,50 @@ export default class Recipe extends React.Component {
 				then() {
 				}
 			});
+			//updating state for the read view of the recipe detail
+			this.setState({
+				ingredients: this.convertIngredientStrToObject(this.state.ingredientsStr),
+				steps: this.convertStepStrToObject(this.state.stepsStr),
+				authData: authData
+			});
+			//this.props.onEdit;
+			console.log('state.authData: ' + this.state.authData);
+			console.log('got to set state authData');
+
+
 		} else {
 			base.authWithOAuthPopup('google', (error, authData) => {
 				if (error) {
 					console.log("Login Failed!", error);
 				} else {
-					console.log("Authenticated successfully with payload:", authData);
+					console.log("Authenticated successfully with payload");
+//refactor (dupe above)
+					//updating state for the read view of the recipe detail
+					this.setState({
+						ingredients: this.convertIngredientStrToObject(this.state.ingredientsStr),
+						steps: this.convertStepStrToObject(this.state.stepsStr),
+						authData: authData
+					});
+					//this.props.onEdit;
+					console.log('state.authData: ' + this.state.authData);
+					console.log('got to set state authData');
+
 				}
 			}, {
 				remember: 'sessionOnly'
 			});
 		}
 
-		//updating state for the read view of the recipe detail
-		this.setState({
-			ingredients: this.convertIngredientStrToObject(this.state.ingredientsStr),
-			steps: this.convertStepStrToObject(this.state.stepsStr)
-		});
+
 
 		let form = document.getElementById('recipeEditForm');
 		form.reset();
 	};
 
+	/**
+	 * Render delete button
+	 *
+	 */
 	renderDelete = () => {
 		return <Button bsStyle="danger" data={this.state.name} onClick={this.props.onDelete} >Delete</Button>
 	};
@@ -316,8 +340,16 @@ export default class Recipe extends React.Component {
 		});
 		return stepObj;
 	}
-}
 
+//TODO
+	/**
+	 * Edit button click handler
+	 *
+	 */
+	editBtnClick = () => {
+		this.setState({ show: true});
+	}
+}
 
 /**
  * Helper that removes spaces between chars/words; used to create recipe name
