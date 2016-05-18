@@ -23,7 +23,6 @@ export default class App extends React.Component {
 		};
 	}
 
-//05.02.16 3:45p need to verify; not sure componentWillMount goes here in es6 format
 	componentWillMount() {
 		base.bindToState('recipes', {
 			context: this,
@@ -85,8 +84,6 @@ export default class App extends React.Component {
 									<label htmlFor="recipe-steps">Steps</label>
 									<textarea className="form-control" id="recipeSteps" name="recipeSteps" placeholder="enter steps separated by line break" rows="10" cols="50"></textarea>
 								</div>
-
-
 							</form>
 						</Modal.Body>
 
@@ -100,7 +97,7 @@ export default class App extends React.Component {
 					<div className="col-xs-12 col-sm-12">
 						<p className="text-center">Brought to you with <i className="fa fa-heart"></i><br /> 
 							from <a href="http://www.carolchung.com" target="_blank">Tusk Tusk Dev.</a><br />
-							<a href="https://github.com/cch5ng/recipe-box" target="_blank">Source</a>
+							<a href="https://github.com/cch5ng/recipe-box-firebase" target="_blank">Source</a>
 						</p>
 					</div>
 				</div>
@@ -111,7 +108,7 @@ export default class App extends React.Component {
 	/**
 	 * Adds recipe to local storage and to state
 	 * @param  {[type]} event [description]
-	 * @return {[type]}       [description]
+	 * result: update firebase
 	 */
 	addRecipe = (event) => {
 		if (this.state.nameValid === 'success') {
@@ -162,7 +159,7 @@ export default class App extends React.Component {
 	/**
 	 * Form validation to ensure that a new name field is unique (key in localStorage)
 	 * @param  {[type]} event [description]
-	 * @return {[type]}       [description]
+	 * 
 	 */
 	validationState = (event) => {
 		this.setState({
@@ -173,12 +170,10 @@ export default class App extends React.Component {
 		let recipesAr = this.state.recipes;
 		let keysAr = [];
 		recipesAr.map(function(recipe) {
-			//console.log('recipe.name' + recipe.name);
 			if (recipe.name === curName) {
 				namesAr.push(recipe.name);
 			}
 		});
-		//console.log('namesAr: ' + namesAr);
 
 		for (let i = 0; i < namesAr.length; i++) {
 			if (curName === namesAr[i]) {
@@ -192,14 +187,13 @@ export default class App extends React.Component {
 	/**
 	 * Deletes a recipe from localStorage and state (recipes array). Triggered from Recipe.jsx button.
 	 * @param  {String} id - Recipe id
-	 * @return {[type]}    [description]
+	 * @result: update firebase
 	 */
 	deleteRecipe = (key) => {
 		var onComplete = function(error) {
 			if (error) {
 				console.log('synchronization issue: ' + error);
 			} else {
-				//console.log('synchronization succeeded');
 			}
 		}
 
@@ -224,7 +218,7 @@ export default class App extends React.Component {
 	/**
 	 * Triggers rebase authWithOAuthPopup() function for google-based login.
 	 * @param  {String} id - Recipe id
-	 * @return {[type]}    [description]
+	 * result: log into both Google and firebase
 	 */
 	googleLogin = () => {
 		base.authWithOAuthPopup('google', (error, authData) => {
@@ -232,7 +226,6 @@ export default class App extends React.Component {
 				console.log("Login Failed!", error);
 			} else {
 				console.log("Authenticated successfully with payload");
-//TODO save token to localstorage
 			}
 		}, {
 			remember: 'sessionOnly'
@@ -242,7 +235,7 @@ export default class App extends React.Component {
 	/**
 	 * Log out of firebase
 	 * @param  {String} id - Recipe id
-	 * @return {[type]}    [description]
+	 * result: log out of firebase but does not log out of Google acct
 	 */
 	logOut = () => {
 		base.unauth();
@@ -250,5 +243,4 @@ export default class App extends React.Component {
 			recipesRef.unauth();
 		}
 	}
-
 }

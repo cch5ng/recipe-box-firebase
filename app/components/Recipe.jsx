@@ -58,8 +58,6 @@ export default class Recipe extends React.Component {
 
 //refactor this is a bit redundant with ingredients
 		var steps = this.state.steps;
-		//console.log('steps from db: ' + steps);
-		//console.log('typeof steps from db: ' + typeof steps);
 		var stepsAr = [];
 		//firebase stores lists in object format
 		if (typeof steps === 'object') {
@@ -69,7 +67,6 @@ export default class Recipe extends React.Component {
 		}
 		var stepNodes = stepsAr.map(function(step, idx) {
 			let keyStr = uuid.v1();
-			//let keyStr = trimSpaces(nameStr) + 'Ing' + idx;
 			return (
 				<div className="ingredient" key={keyStr} >
 					{step}
@@ -80,7 +77,6 @@ export default class Recipe extends React.Component {
 		stepsAr.forEach(function(step) {
 			stepsEditStr += step + '\n';
 		})
-
 
 		return (
 			<div className={classStrOutter} key={this.state.key}>
@@ -96,7 +92,6 @@ export default class Recipe extends React.Component {
 					</div>
 					<div className="button-section">
 						<Button bsStyle="default" onClick={this.editBtnClick}>Edit</Button>
-						{/*{onEdit ? this.renderEditBtn() : null}*/}
 						{onDelete ? this.renderDelete() : null}
 						<div className="modal-container">
 							<Modal
@@ -124,8 +119,6 @@ export default class Recipe extends React.Component {
 											<label htmlFor="recipeStepsEdit">Steps</label>
 											<textarea className="form-control" id="recipeStepsEdit" name="recipeStepsEdit" value={this.state.stepsStr} onChange={this.updateStepsField} rows="10" cols="50"></textarea>
 										</div>
-
-
 									</form>
 								</Modal.Body>
 
@@ -142,9 +135,9 @@ export default class Recipe extends React.Component {
 	}
 
 	/**
-	 * Updates state with edit form values
+	 * Updates state with edit form values for ingredients
 	 * @param  {[type]} event [description]
-	 * @return {[type]}       [description]
+	 *
 	 */
 	updateIngredientsField = (event) => {
 		let ingredientsStr = event.target.value;
@@ -152,9 +145,9 @@ export default class Recipe extends React.Component {
 	};
 
 	/**
-	 * Updates state with edit form values
+	 * Updates state with edit form values for steps
 	 * @param  {[type]} event [description]
-	 * @return {[type]}       [description]
+	 *
 	 */
 	updateStepsField = (event) => {
 		let stepsStr = event.target.value;
@@ -186,7 +179,7 @@ export default class Recipe extends React.Component {
 	};
 
 	/**
-	 * Updates localStorage and state with edit form ingredients values
+	 * Updates firebase and state with edit form ingredient and step values
 	 * @param  {[type]} event [description]
 	 * @return {[type]}       [description]
 	 */
@@ -210,7 +203,7 @@ export default class Recipe extends React.Component {
 			}
 		});
 
-	//parsing the ingredients, cleaning up the format so it will display cleanly later on
+		//parsing the ingredients, cleaning up the format so it will display cleanly later on
 		let curIngredientsAr = this.state.ingredientsStr.split(',');
 		var ingredientsTrim = [];
 
@@ -235,11 +228,6 @@ export default class Recipe extends React.Component {
 				steps: this.convertStepStrToObject(this.state.stepsStr),
 				authData: authData
 			});
-			//this.props.onEdit;
-			console.log('state.authData: ' + this.state.authData);
-			console.log('got to set state authData');
-
-
 		} else {
 			base.authWithOAuthPopup('google', (error, authData) => {
 				if (error) {
@@ -250,20 +238,13 @@ export default class Recipe extends React.Component {
 					//updating state for the read view of the recipe detail
 					this.setState({
 						ingredients: this.convertIngredientStrToObject(this.state.ingredientsStr),
-						steps: this.convertStepStrToObject(this.state.stepsStr),
-						authData: authData
+						steps: this.convertStepStrToObject(this.state.stepsStr)
 					});
-					//this.props.onEdit;
-					console.log('state.authData: ' + this.state.authData);
-					console.log('got to set state authData');
-
 				}
 			}, {
 				remember: 'sessionOnly'
 			});
 		}
-
-
 
 		let form = document.getElementById('recipeEditForm');
 		form.reset();
@@ -271,7 +252,7 @@ export default class Recipe extends React.Component {
 
 	/**
 	 * Render delete button
-	 *
+	 * @return HTML string for Delete button
 	 */
 	renderDelete = () => {
 		return <Button bsStyle="danger" data={this.state.name} onClick={this.props.onDelete} >Delete</Button>
@@ -279,7 +260,8 @@ export default class Recipe extends React.Component {
 
 	/**
 	 * Convert object from firebase to string for form text area display
-	 *
+	 * @param  {object} object representation of recipe steps (firebase storage return for list)
+	 * @return string, delimited by newline
 	 */
 	convertStepToString = (objects) => {
 		let itemStr = '';
@@ -298,7 +280,8 @@ export default class Recipe extends React.Component {
 
 	/**
 	 * Convert object from firebase to string for form input text display
-	 *
+	 * @param  {object} object representation of recipe ingredients (firebase storage return for list)
+	 * @return string, comma delimited
 	 */
 	convertIngredientToString = (objects) => {
 		let itemStr = '';
@@ -317,7 +300,8 @@ export default class Recipe extends React.Component {
 
 	/**
 	 * Convert latest form input text string to object for firebase update
-	 *
+	 * @param string
+	 * @return {object} representation of ingredients
 	 */
 	convertIngredientStrToObject = (str) => {
 		let ingObj = {};
@@ -330,7 +314,8 @@ export default class Recipe extends React.Component {
 
 	/**
 	 * Convert latest form text area string to object for firebase update
-	 *
+	 * @param string
+	 * @return {object} representation of steps
 	 */
 	convertStepStrToObject = (str) => {
 		let stepObj = {};
@@ -341,10 +326,9 @@ export default class Recipe extends React.Component {
 		return stepObj;
 	}
 
-//TODO
 	/**
 	 * Edit button click handler
-	 *
+	 * result: update state so the recipe edit modal displays
 	 */
 	editBtnClick = () => {
 		this.setState({ show: true});
