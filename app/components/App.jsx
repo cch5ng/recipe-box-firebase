@@ -232,7 +232,6 @@ export default class App extends React.Component {
 				console.log("Login Failed!", error);
 			} else {
 				console.log("Authenticated successfully with payload");
-				base.onAuth(this.authDataCallback(authData));
 //TODO save token to localstorage
 			}
 		}, {
@@ -251,32 +250,5 @@ export default class App extends React.Component {
 			recipesRef.unauth();
 		}
 	}
-
-	// /**
-	//  * Verify authentication state
-	//  * @return {boolean}    true if current session is authenticated, false otherwise
-	//  */
-	// isAuthenticated = () => {
-	// 	let auth = false;
-	// 	if (base.getAuth() || recipesRef.getAuth()) {
-	// 		return true;
-	// 	} else {
-	// 		return auth;
-	// 	}
-	// }
-
-// //TODO
-// 	/**
-// 	 * 
-// 	 * @param
-// 	 * @return {boolean}    true if current session is authenticated, false otherwise
-// 	 */
-// 	authDataCallback = (authData) => {
-// 		if (authData) {
-// 			this.setState({isAuthenticated: true});
-// 		} else {
-// 			this.setState({isAuthenticated: false});
-// 		}
-// 	}
 
 }
