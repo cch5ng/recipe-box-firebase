@@ -19742,9 +19742,6 @@
 			return _this;
 		}
 
-		//05.02.16 3:45p need to verify; not sure componentWillMount goes here in es6 format
-
-
 		_createClass(App, [{
 			key: 'componentWillMount',
 			value: function componentWillMount() {
@@ -19756,35 +19753,6 @@
 			}
 		}, {
 			key: 'render',
-
-
-			// /**
-			//  * Verify authentication state
-			//  * @return {boolean}    true if current session is authenticated, false otherwise
-			//  */
-			// isAuthenticated = () => {
-			// 	let auth = false;
-			// 	if (base.getAuth() || recipesRef.getAuth()) {
-			// 		return true;
-			// 	} else {
-			// 		return auth;
-			// 	}
-			// }
-
-			// //TODO
-			// 	/**
-			// 	 *
-			// 	 * @param
-			// 	 * @return {boolean}    true if current session is authenticated, false otherwise
-			// 	 */
-			// 	authDataCallback = (authData) => {
-			// 		if (authData) {
-			// 			this.setState({isAuthenticated: true});
-			// 		} else {
-			// 			this.setState({isAuthenticated: false});
-			// 		}
-			// 	}
-
 			value: function render() {
 				var _this2 = this;
 
@@ -19930,7 +19898,7 @@
 								_react2.default.createElement('br', null),
 								_react2.default.createElement(
 									'a',
-									{ href: 'https://github.com/cch5ng/recipe-box', target: '_blank' },
+									{ href: 'https://github.com/cch5ng/recipe-box-firebase', target: '_blank' },
 									'Source'
 								)
 							)
@@ -19942,35 +19910,35 @@
 			/**
 	   * Adds recipe to local storage and to state
 	   * @param  {[type]} event [description]
-	   * @return {[type]}       [description]
+	   * result: update firebase
 	   */
 
 
 			/**
 	   * Form validation to ensure that a new name field is unique (key in localStorage)
 	   * @param  {[type]} event [description]
-	   * @return {[type]}       [description]
+	   * 
 	   */
 
 
 			/**
 	   * Deletes a recipe from localStorage and state (recipes array). Triggered from Recipe.jsx button.
 	   * @param  {String} id - Recipe id
-	   * @return {[type]}    [description]
+	   * @result: update firebase
 	   */
 
 
 			/**
 	   * Triggers rebase authWithOAuthPopup() function for google-based login.
 	   * @param  {String} id - Recipe id
-	   * @return {[type]}    [description]
+	   * result: log into both Google and firebase
 	   */
 
 
 			/**
 	   * Log out of firebase
 	   * @param  {String} id - Recipe id
-	   * @return {[type]}    [description]
+	   * result: log out of firebase but does not log out of Google acct
 	   */
 
 		}]);
@@ -20036,12 +20004,10 @@
 			var recipesAr = _this3.state.recipes;
 			var keysAr = [];
 			recipesAr.map(function (recipe) {
-				//console.log('recipe.name' + recipe.name);
 				if (recipe.name === curName) {
 					namesAr.push(recipe.name);
 				}
 			});
-			//console.log('namesAr: ' + namesAr);
 
 			for (var i = 0; i < namesAr.length; i++) {
 				if (curName === namesAr[i]) {
@@ -20056,9 +20022,7 @@
 			var onComplete = function onComplete(error) {
 				if (error) {
 					console.log('synchronization issue: ' + error);
-				} else {
-					//console.log('synchronization succeeded');
-				}
+				} else {}
 			};
 
 			//authenticate session before insert
@@ -20085,8 +20049,6 @@
 					console.log("Login Failed!", error);
 				} else {
 					console.log("Authenticated successfully with payload");
-					base.onAuth(_this3.authDataCallback(authData));
-					//TODO save token to localstorage
 				}
 			}, {
 				remember: 'sessionOnly'
@@ -20244,8 +20206,6 @@
 
 				//refactor this is a bit redundant with ingredients
 				var steps = this.state.steps;
-				//console.log('steps from db: ' + steps);
-				//console.log('typeof steps from db: ' + typeof steps);
 				var stepsAr = [];
 				//firebase stores lists in object format
 				if ((typeof steps === 'undefined' ? 'undefined' : _typeof(steps)) === 'object') {
@@ -20255,7 +20215,6 @@
 				}
 				var stepNodes = stepsAr.map(function (step, idx) {
 					var keyStr = _nodeUuid2.default.v1();
-					//let keyStr = trimSpaces(nameStr) + 'Ing' + idx;
 					return _react2.default.createElement(
 						'div',
 						{ className: 'ingredient', key: keyStr },
@@ -20388,16 +20347,16 @@
 			}
 
 			/**
-	   * Updates state with edit form values
+	   * Updates state with edit form values for ingredients
 	   * @param  {[type]} event [description]
-	   * @return {[type]}       [description]
+	   *
 	   */
 
 
 			/**
-	   * Updates state with edit form values
+	   * Updates state with edit form values for steps
 	   * @param  {[type]} event [description]
-	   * @return {[type]}       [description]
+	   *
 	   */
 
 
@@ -20415,7 +20374,7 @@
 
 
 			/**
-	   * Updates localStorage and state with edit form ingredients values
+	   * Updates firebase and state with edit form ingredient and step values
 	   * @param  {[type]} event [description]
 	   * @return {[type]}       [description]
 	   */
@@ -20423,38 +20382,41 @@
 
 			/**
 	   * Render delete button
-	   *
+	   * @return HTML string for Delete button
 	   */
 
 
 			/**
 	   * Convert object from firebase to string for form text area display
-	   *
+	   * @param  {object} object representation of recipe steps (firebase storage return for list)
+	   * @return string, delimited by newline
 	   */
 
 
 			/**
 	   * Convert object from firebase to string for form input text display
-	   *
+	   * @param  {object} object representation of recipe ingredients (firebase storage return for list)
+	   * @return string, comma delimited
 	   */
 
 
 			/**
 	   * Convert latest form input text string to object for firebase update
-	   *
+	   * @param string
+	   * @return {object} representation of ingredients
 	   */
 
 
 			/**
 	   * Convert latest form text area string to object for firebase update
-	   *
+	   * @param string
+	   * @return {object} representation of steps
 	   */
 
 
-			//TODO
 			/**
 	   * Edit button click handler
-	   *
+	   * result: update state so the recipe edit modal displays
 	   */
 
 		}]);
@@ -20542,9 +20504,6 @@
 					steps: _this3.convertStepStrToObject(_this3.state.stepsStr),
 					authData: authData
 				});
-				//this.props.onEdit;
-				console.log('state.authData: ' + _this3.state.authData);
-				console.log('got to set state authData');
 			} else {
 				base.authWithOAuthPopup('google', function (error, authData) {
 					if (error) {
@@ -20555,12 +20514,8 @@
 						//updating state for the read view of the recipe detail
 						_this3.setState({
 							ingredients: _this3.convertIngredientStrToObject(_this3.state.ingredientsStr),
-							steps: _this3.convertStepStrToObject(_this3.state.stepsStr),
-							authData: authData
+							steps: _this3.convertStepStrToObject(_this3.state.stepsStr)
 						});
-						//this.props.onEdit;
-						console.log('state.authData: ' + _this3.state.authData);
-						console.log('got to set state authData');
 					}
 				}, {
 					remember: 'sessionOnly'
