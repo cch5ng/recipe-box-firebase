@@ -39,8 +39,10 @@ export default class App extends React.Component {
 					<nav className="navbar navbar-default">
 						<div className="navbar-header">
 							<a className="navbar-brand" href="#">Recipe Box</a>
-							<button className="btn btn-default navbar-btn" onClick={this.googleLogin} >Login with Google</button>
-							<button className="btn btn-default navbar-btn navbar-right" onClick={this.logOut} >Log Out</button>
+							<span className="right">
+								<button className="btn btn-default navbar-btn" onClick={this.googleLogin} >Login with Google</button>
+								<button className="btn btn-default navbar-btn navbar-right" onClick={this.logOut} >Log Out</button>
+							</span>
 						</div>
 					</nav>
 				</div>

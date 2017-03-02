@@ -65,6 +65,15 @@ img {
 	text-align: center;
 }
 
+.right {
+	float: right;
+	margin-right: 25px;
+}
+
+.login {
+	float: right;
+}
+
 .clear {
 	clear: both;
 }
@@ -120,10 +129,6 @@ img {
 	margin-left: 10%;
 }
 
-
-
-
-
 input {
 	width: 200px;
 }
@@ -157,4 +162,10 @@ input {
 
 .footer {
 	padding-top: 30px;
+}
+
+@media (min-width: 768px) {
+	.navbar-header {
+ 	   float: none;
+	}
 }
