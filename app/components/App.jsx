@@ -45,6 +45,7 @@ export default class App extends React.Component {
 					</nav>
 				</div>
 				<Recipes recipes={recipes} onDelete={this.deleteRecipe} />
+				<div className="clearfix" />
 				<Button
 					bsStyle="default"
 					onClick={() => this.setState({ show: true})}>
@@ -83,6 +84,10 @@ export default class App extends React.Component {
 								<div className="form-group">
 									<label htmlFor="recipe-steps">Steps</label>
 									<textarea className="form-control" id="recipeSteps" name="recipeSteps" placeholder="enter steps separated by line break" rows="10" cols="50"></textarea>
+								</div>
+								<div className="form-group">
+									<label htmlFor="recipe-img">Image URL</label>
+									<input type="text" className="form-control" id="recipe-img" name="recipe-img" placeholder="enter image url" size="150" />
 								</div>
 							</form>
 						</Modal.Body>

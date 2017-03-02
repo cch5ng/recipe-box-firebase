@@ -11,7 +11,7 @@ export default ({recipes, onDelete, onEdit}) => {
 	return (
 		<div className="recipeList">
 			{recipes.map(recipe =>
-				<Recipe key={recipe.key} name={recipe.name} ingredients={recipe.ingredients} steps={recipe.steps} onDelete={onDelete.bind(null, recipe.key)} />
+				<Recipe key={recipe.key} name={recipe.name} ingredients={recipe.ingredients} steps={recipe.steps} image_url={recipe.image_url} onDelete={onDelete.bind(null, recipe.key)} />
 			)}
 		</div>
 	)
