@@ -2,7 +2,7 @@
 
 //vars
 $primary-color: #f9f9fd;
-$nav-color: #ff9a96;
+$nav-color: #ffd2b5;
 $logo-color: #003333;
 $table-color: #96ceb4;
 
@@ -18,6 +18,7 @@ body {
 
 .navbar {
 	background-color: $nav-color;
+	min-height: 70px; /* bootstrap overwrite */
 }
 
 .nav-logo {
@@ -31,7 +32,7 @@ body {
 
 .navbar-brand {
 	font-family: 'Lobster Two', cursive;
-	font-size: 1.65em;
+	font-size: 2.25em;
 }
 
 //not enough viz contrast with white text on red bgd
@@ -47,6 +48,10 @@ button {
 	margin-right: 8px;
 }
 
+img {
+	border-radius: 8px;
+}
+
 // react-bootstrap modal
 .modal-container {
   position: relative;
@@ -58,6 +63,15 @@ button {
 
 .center {
 	text-align: center;
+}
+
+.right {
+	float: right;
+	margin-right: 25px;
+}
+
+.login {
+	float: right;
 }
 
 .clear {
@@ -115,10 +129,6 @@ button {
 	margin-left: 10%;
 }
 
-
-
-
-
 input {
 	width: 200px;
 }
@@ -152,4 +162,10 @@ input {
 
 .footer {
 	padding-top: 30px;
+}
+
+@media (min-width: 768px) {
+	.navbar-header {
+ 	   float: none;
+	}
 }
