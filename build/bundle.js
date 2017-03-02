@@ -19775,19 +19775,24 @@
 									'Recipe Box'
 								),
 								_react2.default.createElement(
-									'button',
-									{ className: 'btn btn-default navbar-btn', onClick: this.googleLogin },
-									'Login with Google'
-								),
-								_react2.default.createElement(
-									'button',
-									{ className: 'btn btn-default navbar-btn navbar-right', onClick: this.logOut },
-									'Log Out'
+									'span',
+									{ className: 'right' },
+									_react2.default.createElement(
+										'button',
+										{ className: 'btn btn-default navbar-btn', onClick: this.googleLogin },
+										'Login with Google'
+									),
+									_react2.default.createElement(
+										'button',
+										{ className: 'btn btn-default navbar-btn navbar-right', onClick: this.logOut },
+										'Log Out'
+									)
 								)
 							)
 						)
 					),
 					_react2.default.createElement(_Recipes2.default, { recipes: recipes, onDelete: this.deleteRecipe }),
+					_react2.default.createElement('div', { className: 'clearfix' }),
 					_react2.default.createElement(
 						_reactBootstrap.Button,
 						{
@@ -19856,6 +19861,16 @@
 											'Steps'
 										),
 										_react2.default.createElement('textarea', { className: 'form-control', id: 'recipeSteps', name: 'recipeSteps', placeholder: 'enter steps separated by line break', rows: '10', cols: '50' })
+									),
+									_react2.default.createElement(
+										'div',
+										{ className: 'form-group' },
+										_react2.default.createElement(
+											'label',
+											{ htmlFor: 'recipe-img' },
+											'Image URL'
+										),
+										_react2.default.createElement('input', { type: 'text', className: 'form-control', id: 'recipe-img', name: 'recipe-img', placeholder: 'enter image url', size: '150' })
 									)
 								)
 							),
@@ -20102,7 +20117,7 @@
 			'div',
 			{ className: 'recipeList' },
 			recipes.map(function (recipe) {
-				return _react2.default.createElement(_Recipe2.default, { key: recipe.key, name: recipe.name, ingredients: recipe.ingredients, steps: recipe.steps, onDelete: onDelete.bind(null, recipe.key) });
+				return _react2.default.createElement(_Recipe2.default, { key: recipe.key, name: recipe.name, ingredients: recipe.ingredients, steps: recipe.steps, image_url: recipe.image_url, onDelete: onDelete.bind(null, recipe.key) });
 			})
 		);
 	};
@@ -20184,6 +20199,7 @@
 				//using the recipe name as a unique identifier to set className and accordion display state
 				var classStr = void 0,
 				    classStrOutter = void 0;
+				var recipeClass = void 0;
 				this.state.isOpen ? classStr = this.concatName() + ' padding' : classStr = this.concatName() + ' padding hidden';
 				name ? classStrOutter = 'recipe clear' : classStrOutter = 'recipe clear hidden';
 
@@ -20226,14 +20242,17 @@
 					stepsEditStr += step + '\n';
 				});
 
+				recipeClass = classStrOutter + ' col-xs-12 col-sm-2 col-md-3';
+
 				return _react2.default.createElement(
 					'div',
-					{ className: classStrOutter, key: this.state.key },
+					{ className: 'col-xs-12 col-sm-6 col-md-2 col-lg-4', key: this.state.key },
 					_react2.default.createElement(
 						'p',
 						{ className: 'h4', onClick: this.toggleIngredients },
 						name
 					),
+					_react2.default.createElement('img', { src: this.props.image_url, className: 'img-responsive', alt: 'photo' }),
 					_react2.default.createElement(
 						'div',
 						{ className: classStr },
@@ -43354,7 +43373,7 @@
 
 
 	// module
-	exports.push([module.id, "/* app/main.scss */\nbody {\n  background: #f9f9fd; }\n\n.navbar navbar-default {\n  border-width: 0;\n  border-radius: none; }\n\n.navbar {\n  background-color: #ff9a96; }\n\n.nav-logo {\n  width: 269px;\n  margin-top: -5px; }\n\n.navbar-default .navbar-brand {\n  color: #003333; }\n\n.navbar-brand {\n  font-family: 'Lobster Two', cursive;\n  font-size: 1.65em; }\n\n.btn-danger {\n  color: #000; }\n\n.btn-default {\n  background-color: #e5e5e5; }\n\nbutton {\n  margin-right: 8px; }\n\n.modal-container {\n  position: relative; }\n\n.modal-container .modal, .modal-container .modal-backdrop {\n  position: absolute; }\n\n.center {\n  text-align: center; }\n\n.clear {\n  clear: both; }\n\n.hidden {\n  display: none; }\n\n.recipe {\n  width: 80%;\n  background-color: #96ceb4;\n  border: 1px solid grey;\n  border-radius: 3px;\n  margin: 5px auto;\n  padding-left: 10px; }\n\n.h5 {\n  text-align: center; }\n\n.padding {\n  padding-bottom: 40px; }\n\n.ingredientList {\n  width: 90%;\n  background-color: #f9f9fd;\n  border: 1px solid grey;\n  border-radius: 3px;\n  margin-bottom: 5px;\n  margin: 0 auto; }\n\n.ingredient {\n  border-bottom: 1px solid grey;\n  padding: 5px 10px; }\n\n.button-section {\n  padding-top: 8px; }\n\n.buttons {\n  float: left;\n  list-style: none;\n  margin-right: 5px; }\n\n.btn-add {\n  margin-left: 10%; }\n\ninput {\n  width: 200px; }\n\n.avatar {\n  width: 28px;\n  border-radius: 3px; }\n\n.dynamic-header {\n  color: #21586b;\n  text-decoration: underline; }\n\n.fa-caret-down {\n  text-decoration: underline; }\n\n.fa-heart {\n  color: #990033; }\n\n.hide-fa {\n  display: none; }\n\n.fixedDataTableLayout_main {\n  margin: 0 auto; }\n\n.footer {\n  padding-top: 30px; }\n", ""]);
+	exports.push([module.id, "/* app/main.scss */\nbody {\n  background: #f9f9fd; }\n\n.navbar navbar-default {\n  border-width: 0;\n  border-radius: none; }\n\n.navbar {\n  background-color: #ffd2b5;\n  min-height: 70px;\n  /* bootstrap overwrite */ }\n\n.nav-logo {\n  width: 269px;\n  margin-top: -5px; }\n\n.navbar-default .navbar-brand {\n  color: #003333; }\n\n.navbar-brand {\n  font-family: 'Lobster Two', cursive;\n  font-size: 2.25em; }\n\n.btn-danger {\n  color: #000; }\n\n.btn-default {\n  background-color: #e5e5e5; }\n\nbutton {\n  margin-right: 8px; }\n\nimg {\n  border-radius: 8px; }\n\n.modal-container {\n  position: relative; }\n\n.modal-container .modal, .modal-container .modal-backdrop {\n  position: absolute; }\n\n.center {\n  text-align: center; }\n\n.right {\n  float: right;\n  margin-right: 25px; }\n\n.login {\n  float: right; }\n\n.clear {\n  clear: both; }\n\n.hidden {\n  display: none; }\n\n.recipe {\n  width: 80%;\n  background-color: #96ceb4;\n  border: 1px solid grey;\n  border-radius: 3px;\n  margin: 5px auto;\n  padding-left: 10px; }\n\n.h5 {\n  text-align: center; }\n\n.padding {\n  padding-bottom: 40px; }\n\n.ingredientList {\n  width: 90%;\n  background-color: #f9f9fd;\n  border: 1px solid grey;\n  border-radius: 3px;\n  margin-bottom: 5px;\n  margin: 0 auto; }\n\n.ingredient {\n  border-bottom: 1px solid grey;\n  padding: 5px 10px; }\n\n.button-section {\n  padding-top: 8px; }\n\n.buttons {\n  float: left;\n  list-style: none;\n  margin-right: 5px; }\n\n.btn-add {\n  margin-left: 10%; }\n\ninput {\n  width: 200px; }\n\n.avatar {\n  width: 28px;\n  border-radius: 3px; }\n\n.dynamic-header {\n  color: #21586b;\n  text-decoration: underline; }\n\n.fa-caret-down {\n  text-decoration: underline; }\n\n.fa-heart {\n  color: #990033; }\n\n.hide-fa {\n  display: none; }\n\n.fixedDataTableLayout_main {\n  margin: 0 auto; }\n\n.footer {\n  padding-top: 30px; }\n\n@media (min-width: 768px) {\n  .navbar-header {\n    float: none; } }\n", ""]);
 
 	// exports
 
