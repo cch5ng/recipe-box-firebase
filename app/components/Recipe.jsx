@@ -83,7 +83,7 @@ export default class Recipe extends React.Component {
 //		<p className="h4" onClick={this.toggleIngredients}>{name}</p>
 
 		return (
-			<div className="col-xs-12 col-sm-6 col-md-2 col-lg-4" key={this.state.key}>
+			<div className="col-xs-12 col-sm-6 col-md-6 col-lg-4" key={this.state.key}>
 				<a href="#" className="title" alt="ice cream"><img src={this.props.image_url} className="img-responsive" alt="photo" />
 					<div className="hover-title">{name}</div>
 				</a>
