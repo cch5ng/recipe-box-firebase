@@ -80,11 +80,11 @@ export default class Recipe extends React.Component {
 		})
 
 		recipeClass = classStrOutter + ' col-xs-12 col-sm-2 col-md-3';
+//		<p className="h4" onClick={this.toggleIngredients}>{name}</p>
 
 		return (
 			<div className="col-xs-12 col-sm-6 col-md-2 col-lg-4" key={this.state.key}>
-				<p className="h4" onClick={this.toggleIngredients}>{name}</p>
-				<img src={this.props.image_url} className="img-responsive" alt="photo" />
+				<a href="#" className="hover-title" alt="ice cream" data={name}><img src={this.props.image_url} className="img-responsive" alt="photo" /></a>
 				<div className={classStr}>
 					<p className="h5">Ingredients</p>
 					<div className="ingredientList">
