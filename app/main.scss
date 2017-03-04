@@ -7,49 +7,50 @@ $logo-color: #003333;
 $table-color: #96ceb4;
 
 body {
-	background: $primary-color;
+    background: $primary-color;
 }
 
 //bootstrap override
 .navbar navbar-default {
-	border-width: 0;
-	border-radius: none;
+    border-width: 0;
+    border-radius: none;
 }
 
 .navbar {
-	background-color: $nav-color;
-	min-height: 70px; /* bootstrap overwrite */
+    background-color: $nav-color;
+    min-height: 70px; /* bootstrap overwrite */
 }
 
 .nav-logo {
-	width: 269px;
-	margin-top: -5px;
+    width: 269px;
+    margin-top: -5px;
 }
 
 .navbar-default .navbar-brand {
-	color: $logo-color;
+    color: $logo-color;
 }
 
 .navbar-brand {
-	font-family: 'Lobster Two', cursive;
-	font-size: 2.25em;
+    font-family: 'Lobster Two', cursive;
+    font-size: 2.25em;
 }
 
 //not enough viz contrast with white text on red bgd
 .btn-danger {
-	color: #000;
+    color: #000;
 }
 
 .btn-default {
-	background-color: #e5e5e5;
+    background-color: #e5e5e5;
 }
 
 button {
-	margin-right: 8px;
+    margin-right: 8px;
 }
 
 img {
-	border-radius: 8px;
+    border-radius: 8px;
+    margin-bottom: 35px;
 }
 
 // react-bootstrap modal
@@ -62,110 +63,150 @@ img {
 }
 
 .center {
-	text-align: center;
+    text-align: center;
 }
 
 .right {
-	float: right;
-	margin-right: 25px;
+    float: right;
+    margin-right: 25px;
 }
 
 .login {
-	float: right;
+    float: right;
 }
 
 .clear {
-	clear: both;
+    clear: both;
 }
 
 .hidden {
-	display: none;
+    display: none;
 }
 
 .recipe {
-	width: 80%;
-	background-color: $table-color;
-	border: 1px solid grey;
-	border-radius: 3px;
-	margin: 5px auto;
-	padding-left: 10px;
+    width: 80%;
+    background-color: $table-color;
+    border: 1px solid grey;
+    border-radius: 3px;
+    margin: 5px auto;
+    padding-left: 10px;
 }
 
 .h5 {
-	//text-decoration: underline;
-	text-align: center;
+    //text-decoration: underline;
+    text-align: center;
 }
 
 //keeps the delete/edit buttons in same grouping with their recipe
 .padding {
-	padding-bottom: 40px;
+    padding-bottom: 40px;
 }
 
+//animation
+.hover-title {
+    position: absolute;
+    top: 0; right: 0;
+    bottom: 0; left: 0;
+    max-width: 350px;
+    font-size: 3.5em;
+    text-align: center;
+//    text-decoration: none !important;
+    line-height: 100%;
+    content: attr(data);
+    opacity: 0;
+    vertical-align:middle;
+    -webkit-transition: opacity 0.6s;
+    -moz-transition: opacity 0.6s;
+    transition: opacity 0.6s;
+}
+
+//.hover-title::after {
+ //   position: absolute;
+ //   left: 30px;
+ //   bottom: 100px;
+//}
+
+.hover-title:hover {
+    opacity: 1.0;
+}
+
+a.title:link,
+a.title:visited,
+a.title:hover,
+a.title:active {
+    color: #f24277;
+}
+
+//a.hover-title:hover,
+//a.hover-title:active {
+//    color: #cc934d;
+//}
+
 .ingredientList {
-	width: 90%;
-	background-color: $primary-color;
-	border: 1px solid grey;
-	border-radius: 3px;
-	margin-bottom: 5px;
-	margin: 0 auto;
+    width: 90%;
+    background-color: $primary-color;
+    border: 1px solid grey;
+    border-radius: 3px;
+    margin-bottom: 5px;
+    margin: 0 auto;
 }
 
 .ingredient {
-	border-bottom: 1px solid grey;
-	padding: 5px 10px;
+    border-bottom: 1px solid grey;
+    padding: 5px 10px;
 }
 
 .button-section {
-	padding-top: 8px;
+    padding-top: 8px;
 }
 
 .buttons {
-	float: left;
-	list-style: none;
-	margin-right: 5px;
+    float: left;
+    list-style: none;
+    margin-right: 5px;
 }
 
 .btn-add {
-	margin-left: 10%;
+    margin-left: 10%;
 }
 
 input {
-	width: 200px;
+    width: 200px;
 }
 
 .avatar {
-	width: 28px;
-	border-radius: 3px;
+    width: 28px;
+    border-radius: 3px;
 }
 
 .dynamic-header {
-	color: #21586b;
-	text-decoration: underline;
+    color: #21586b;
+    text-decoration: underline;
 }
 
 .fa-caret-down {
-	text-decoration: underline;
+    text-decoration: underline;
 }
 
 .fa-heart {
-	color: #990033;
+    color: #990033;
 }
 
 .hide-fa {
-	display: none;
+    display: none;
 }
 
 //override fixed-data-table css
 .fixedDataTableLayout_main {
-	margin: 0 auto;
+    margin: 0 auto;
 }
 
 .footer {
-	padding-top: 30px;
+    padding-top: 30px;
 }
 
 @media (min-width: 768px) {
-	.navbar-header {
- 	   float: none;
-	}
+    .navbar-header {
+       float: none;
+    }
 }
