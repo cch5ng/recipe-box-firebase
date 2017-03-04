@@ -108,11 +108,16 @@ img {
     top: 0; right: 0;
     bottom: 0; left: 0;
     max-width: 350px;
+    font-size: 3.5em;
     text-align: center;
 //    text-decoration: none !important;
     line-height: 100%;
     content: attr(data);
     opacity: 0;
+    vertical-align:middle;
+    -webkit-transition: opacity 0.6s;
+    -moz-transition: opacity 0.6s;
+    transition: opacity 0.6s;
 }
 
 //.hover-title::after {
@@ -123,7 +128,6 @@ img {
 
 .hover-title:hover {
     opacity: 1.0;
-    font-size: 3.5em;
 }
 
 a.title:link,
