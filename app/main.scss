@@ -50,6 +50,7 @@ button {
 
 img {
     border-radius: 8px;
+    margin-bottom: 35px;
 }
 
 // react-bootstrap modal
@@ -103,30 +104,32 @@ img {
 
 //animation
 .hover-title {
-    position: relative;
-    width: 380px;
-    text-decoration: none !important;
-    text-align: center;
-    line-height: 350%;
-}
-
-.hover-title::after {
-    content: attr(data);
     position: absolute;
-    left: 30px;
-    bottom: 100px;
+    top: 0; right: 0;
+    bottom: 0; left: 0;
+    max-width: 350px;
+    text-align: center;
+//    text-decoration: none !important;
+    line-height: 100%;
+    content: attr(data);
     opacity: 0;
 }
 
-.hover-title:hover::after, .hover-title:focus::after {
+//.hover-title::after {
+ //   position: absolute;
+ //   left: 30px;
+ //   bottom: 100px;
+//}
+
+.hover-title:hover {
     opacity: 1.0;
-    font-size: 4em;
+    font-size: 3.5em;
 }
 
-a.hover-title:link,
-a.hover-title:visited,
-a.hover-title:hover,
-a.hover-title:active {
+a.title:link,
+a.title:visited,
+a.title:hover,
+a.title:active {
     color: #f24277;
 }
 

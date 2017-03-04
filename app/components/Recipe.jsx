@@ -84,7 +84,9 @@ export default class Recipe extends React.Component {
 
 		return (
 			<div className="col-xs-12 col-sm-6 col-md-2 col-lg-4" key={this.state.key}>
-				<a href="#" className="hover-title" alt="ice cream" data={name}><img src={this.props.image_url} className="img-responsive" alt="photo" /></a>
+				<a href="#" className="title" alt="ice cream"><img src={this.props.image_url} className="img-responsive" alt="photo" />
+					<div className="hover-title">{name}</div>
+				</a>
 				<div className={classStr}>
 					<p className="h5">Ingredients</p>
 					<div className="ingredientList">
