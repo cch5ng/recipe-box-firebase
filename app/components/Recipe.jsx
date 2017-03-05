@@ -5,7 +5,7 @@ import {Modal} from 'react-bootstrap';
 import {Button} from 'react-bootstrap';
 import {Input} from 'react-bootstrap';
 import Rebase from 're-base';
-import uuid from 'node-uuid';
+import uuid from 'uuid';
 
 var base = Rebase.createClass('https://recipe-keeper.firebaseio.com/web/data');
 var recipesRef = new Firebase("https://recipe-keeper.firebaseio.com/recipes");
