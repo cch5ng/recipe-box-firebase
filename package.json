@@ -1,6 +1,6 @@
 {
   "name": "recipe-box-firebase",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "recipe app with firebase backend",
   "repository": {
     "type": "git",
@@ -33,13 +33,13 @@
     "webpack-merge": "^0.7.3"
   },
   "dependencies": {
-    "es6-promise": "^3.0.2",
+    "es6-promise": "^4.0.5",
     "firebase": "^2.4.2",
     "flux": "^3.1.2",
     "object-assign": "^4.0.1",
-    "re-base": "^1.5.1",
+    "re-base": "^2.6.0",
     "react": "^15.4.2",
-    "react-bootstrap": "^0.28.2",
+    "react-bootstrap": "^0.30.7",
     "react-dom": "^15.4.2",
     "uuid": "^3.0.1"
   }
